@@ -9,4 +9,4 @@ Target approved by owner: apps/{website,administration,api}, packages/{ui,shared
 5. Introduce API, database and testing directories with actual implementations or explicit README scope, not fictional services. Do not store secrets or real personal records.
 6. Review CI, local preview, browser checks and rollback before merging.
 
-Current active source remains gracehillassembly/ until migration is tested. This document does not claim the migration has been executed.
+Canonical apps, packages, assets and archive are established. Source and browser baseline checks passed before legacy cleanup; the cleanup PR must pass CI again before merge.

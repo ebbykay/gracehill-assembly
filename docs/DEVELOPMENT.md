@@ -1,7 +1,7 @@
 # Engineering baseline
 
 ## Architecture decision
-Keep the existing buildless HTML/CSS/JavaScript site during remediation. Avoid a framework migration until requirements justify it. The root of gracehillassembly is authoritative; gha, later use and the ZIP are historical snapshots. Preserve every original file in the initial import.
+Keep the existing buildless HTML/CSS/JavaScript site during remediation. Avoid a framework migration until requirements justify it. The apps and packages directories are authoritative; archive contains historical snapshots. Preserve every original file in the initial import.
 
 ## Prioritised backlog
 - P0: Replace simulated admin access before handling any real data.
@@ -16,7 +16,7 @@ Keep the existing buildless HTML/CSS/JavaScript site during remediation. Avoid a
 Acceptance criteria met; meaningful automated checks pass; affected flows tested; documentation updated; no secrets or real personal records; reviewer approval; no unexplained console errors; accessibility and responsive checks complete. Any exception must be recorded explicitly.
 
 ## Validation limits
-CI checks JavaScript syntax (including inline scripts), expected pages and shared stylesheet references. It does not certify HTML validity, accessibility, asset availability, real delivery, authentication or visual quality. Existing missing assets are tracked above, not hidden by a passing check.
+CI checks source syntax, public build contents, internal navigation and browser smoke tests at three viewport sizes. It does not certify HTML validity, accessibility, asset availability, real delivery, authentication or visual quality. Existing missing assets are tracked above, not hidden by a passing check.
 
 ## Repository controls
 Use PRs for future changes. Require source-check and review on main when GitHub plan/settings allow. No branch protection, public hosting or release is assumed to be enabled merely because these files exist.
