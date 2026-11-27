@@ -13,126 +13,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <!-- AOS Animation -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
-    
+
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="css/style.css">
     
-    <!-- Homepage Specific Styles -->
-    <style>
-        /* Homepage Hero */
-        .hero-home {
-            background: linear-gradient(135deg, rgba(26, 54, 93, 0.95) 0%, rgba(45, 55, 72, 0.9) 100%),
-                        url('../images/hero/church-hero.jpg') center/cover no-repeat;
-            min-height: 90vh;
-        }
-        
-        .welcome-section {
-            text-align: center;
-            max-width: 800px;
-            margin: 4rem auto;
-            padding: 2rem;
-        }
-        
-        .featured-events {
-            background: var(--surface);
-            padding: 4rem 0;
-        }
-        
-        .event-highlight {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            margin-top: 2rem;
-        }
-        
-        .event-item {
-            background: var(--background);
-            padding: 2rem;
-            border-radius: 12px;
-            border-left: 4px solid var(--secondary);
-        }
-        
-        .event-item h4 {
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .event-item .date {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1rem;
-        }
-        
-        .stats-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 2rem;
-            margin: 4rem 0;
-            text-align: center;
-        }
-        
-        .stat-item {
-            padding: 2rem;
-            background: var(--surface);
-            border-radius: 12px;
-            box-shadow: var(--shadow);
-        }
-        
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 700;
-            color: var(--secondary);
-            margin-bottom: 0.5rem;
-        }
-        
-        .stat-label {
-            color: var(--text-secondary);
-            font-weight: 600;
-        }
-        
-        .cta-banner {
-            background: var(--gradient-primary);
-            color: white;
-            padding: 4rem 2rem;
-            text-align: center;
-            border-radius: 12px;
-            margin: 4rem 0;
-        }
-        
-        .cta-banner h2 {
-            color: white;
-            margin-bottom: 1rem;
-        }
-        
-        .cta-banner p {
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 600px;
-            margin: 0 auto 2rem;
-        }
-    </style>
+    <link rel="stylesheet" href="css/homepage.css">
     <link rel="stylesheet" href="css/refinement.css">
 </head>
 <body>
     <!-- Header -->
     <!-- SITE_HEADER -->
 
-    <!-- Theme Banner -->
-    <div class="theme-banner">
-        <div class="container">
-            <i class="fas fa-cross"></i> 2025 OUR YEAR OF SERVING THE LORD <i class="fas fa-cross"></i>
-        </div>
-    </div>
-
+    <main id="main-content">
     <!-- Hero Section -->
     <section class="hero hero-home">
         <div class="hero-content">
-            <h1>Welcome to Gracehill Assembly</h1>
+            <p class="home-eyebrow">Gracehill Assembly · Weija, Accra</p>
+            <h1>Raising Kingdom Giants</h1>
             <p>A vibrant, Spirit-filled church raising Kingdom Giants to impact the world through the Word, prayer, worship, and service.</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <div class="home-actions">
                 <a href="contact.html" class="btn btn-large">
                     <i class="fas fa-calendar-plus"></i>
-                    Join Us This Sunday
+                    Plan Your Visit
                 </a>
                 <a href="ministries.html" class="btn btn-outline btn-large">
                     <i class="fas fa-hands-helping"></i>
@@ -151,25 +53,7 @@
                 <p>Whether you're exploring faith for the first time or have walked with God for years, you'll find a family here. Join us as we raise Kingdom Giants together!</p>
             </div>
             
-            <!-- Stats -->
-            <div class="stats-container">
-                <div class="stat-item" data-animate>
-                    <div class="stat-number">350+</div>
-                    <div class="stat-label">Active Members</div>
-                </div>
-                <div class="stat-item" data-animate>
-                    <div class="stat-number">15+</div>
-                    <div class="stat-label">Ministries</div>
-                </div>
-                <div class="stat-item" data-animate>
-                    <div class="stat-number">10+</div>
-                    <div class="stat-label">Years of Ministry</div>
-                </div>
-                <div class="stat-item" data-animate>
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Community Programs</div>
-                </div>
-            </div>
+            <div class="home-visit-panel"><h3>Join us in worship</h3><p>Broadcasting Junction, Weija, Accra. Contact the church to confirm service times before your visit.</p><a href="contact.html" class="btn">Find Us</a></div>
         </div>
     </section>
 
@@ -225,32 +109,32 @@
     <section class="featured-events">
         <div class="container">
             <div class="section-title" data-animate>
-                <h2>Upcoming Events</h2>
-                <p>Join us for these special gatherings</p>
+                <h2>Gather With Us</h2>
+                <p>Explore our regular gatherings and confirm the latest programme with the church.</p>
             </div>
             
             <div class="event-highlight">
                 <div class="event-item" data-animate>
-                    <h4><i class="fas fa-calendar-alt"></i> Sunday Celebration</h4>
-                    <div class="date">Every Sunday | 8:30 AM</div>
+                    <h3><i class="fas fa-calendar-alt"></i> Sunday Celebration</h3>
+                    
                     <p>Experience God's presence through worship and the Word.</p>
                 </div>
                 
                 <div class="event-item" data-animate>
-                    <h4><i class="fas fa-calendar-alt"></i> Mid-Week Prayer</h4>
-                    <div class="date">Wednesdays | 6:00 PM</div>
+                    <h3><i class="fas fa-calendar-alt"></i> Mid-Week Prayer</h3>
+                    
                     <p>Corporate prayer and intercession for families and nations.</p>
                 </div>
                 
                 <div class="event-item" data-animate>
-                    <h4><i class="fas fa-calendar-alt"></i> All-Night Encounter</h4>
-                    <div class="date">Last Friday | 9:00 PM</div>
+                    <h3><i class="fas fa-calendar-alt"></i> All-Night Encounter</h3>
+                    
                     <p>A night of intense prayer, worship, and spiritual encounter.</p>
                 </div>
                 
                 <div class="event-item" data-animate>
-                    <h4><i class="fas fa-calendar-alt"></i> Youth Explosion</h4>
-                    <div class="date">Monthly | 5:00 PM</div>
+                    <h3><i class="fas fa-calendar-alt"></i> Youth Explosion</h3>
+                    
                     <p>Dynamic gatherings for young people to encounter God.</p>
                 </div>
             </div>
@@ -266,7 +150,7 @@
         <div class="cta-banner" data-animate>
             <h2>Ready to Join the Family?</h2>
             <p>We'd love to welcome you to Gracehill Assembly. Come experience the love of Christ in a family that cares.</p>
-            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+            <div class="home-actions">
                 <a href="contact.html" class="btn btn-large">
                     <i class="fas fa-calendar-plus"></i>
                     Plan Your Visit
@@ -279,11 +163,12 @@
         </div>
     </section>
 
+    </main>
     <!-- Footer -->
     <!-- SITE_FOOTER -->
 
     <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
     <script src="js/theme.js"></script>
     <script src="js/main.js"></script>
 </body>
