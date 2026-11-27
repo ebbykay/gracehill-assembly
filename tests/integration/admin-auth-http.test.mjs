@@ -1,0 +1,24 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import {createApp} from '../../apps/api/src/app.mjs';
+import {createAdminAuthHttp} from '../../apps/api/src/admin-auth-http.mjs';
+test('opt-in routes enforce origin, methods, cookies and session revocation',async t=>{
+ const token='a'.repeat(43);let revoked=false;
+ const handler=createAdminAuthHttp({origin:'https://admin.example',login:{begin:async()=>({location:'https://issuer.example/authorize',cookie:'fixture'}),complete:async input=>input.browser===token?{cookies:['fixture','session']}:null},sessions:{resolve:async value=>value===token&&!revoked?'identity':null,revoke:async()=>{revoked=true;}}});
+ const server=createApp({adminAuth:handler});server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>new Promise(r=>server.close(r)));
+ const base='http://127.0.0.1:'+server.address().port;
+ const req=(path,opts={})=>fetch(base+path,{redirect:'manual',...opts});
+ assert.equal((await req('/auth/login')).status,405);
+ assert.equal((await req('/auth/login',{method:'POST'})).status,403);
+ const origin={Origin:'https://admin.example'};
+ assert.equal((await req('/auth/login',{method:'POST',headers:origin})).status,303);
+ assert.equal((await req('/auth/callback?code=x&state=y')).status,401);
+ assert.equal((await req('/auth/callback?code=x&state=y&state=z')).status,400);
+ assert.equal((await req('/auth/callback?code=x&state=y',{headers:{Cookie:'__Host-gracehill_login='+token}})).status,303);
+ const headers={...origin,Cookie:'__Host-gracehill_session='+token};
+ assert.equal((await req('/auth/session',{headers})).status,200);
+ assert.equal((await req('/auth/logout',{method:'POST',headers:{Cookie:headers.Cookie}})).status,403);
+ assert.equal((await req('/auth/logout',{method:'POST',headers})).status,200);
+ assert.equal((await req('/auth/session',{headers})).status,401);
+});
