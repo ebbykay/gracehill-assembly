@@ -19,3 +19,14 @@ for (const name of fs.readdirSync(path.join(root, 'js')).filter(n=>n.endsWith('.
 }
 assert.ok(fs.statSync(path.join(root,'css/refinement.css')).size > 0);
 console.log('PASS: 7 pages and ' + count + ' scripts. Visual and functional release checks remain required.');
+
+const admin = fs.readFileSync(path.join(root,'admin.html'),'utf8');
+assert.equal([...admin.matchAll(/id="adminPageTitle"/g)].length,1,'admin must have one dynamic title');
+assert.doesNotMatch(admin, /<h2>(Membership Management|Financial Management|Events Management|Ministry Management|Reports & Analytics|Settings)<\/h2>/, 'duplicate department heading');
+assert.doesNotMatch(admin, /type="password"/, 'demo must not solicit passwords');
+const events = fs.readFileSync(path.join(root,'events.html'),'utf8');
+assert.doesNotMatch(events, /<\/i">/, 'malformed icon closing tag');
+assert.match(events, /aria-label="Weekly service schedule"/);
+const shared = fs.readFileSync(path.join(root,'js/main.js'),'utf8');
+assert.doesNotMatch(shared, /Message sent successfully!/);
+console.log('PASS: static regression checks for headings, demo credentials, events and delivery messaging.');
