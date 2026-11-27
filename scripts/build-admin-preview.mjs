@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const out='dist-admin-preview';
+fs.rmSync(out,{recursive:true,force:true});
+fs.mkdirSync(path.join(out,'css'),{recursive:true});
+fs.mkdirSync(path.join(out,'js'),{recursive:true});
+fs.copyFileSync('apps/administration/admin.html',path.join(out,'index.html'));
+for(const name of ['style.css','refinement.css','administration.css'])fs.copyFileSync('packages/ui/css/'+name,path.join(out,'css',name));
+fs.copyFileSync('packages/shared/js/administration.js',path.join(out,'js/administration.js'));
+console.log('Local administration design preview built; never publish as an authenticated service.');

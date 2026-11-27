@@ -31,3 +31,5 @@ test('shared layout renders exactly once and marks current page',()=>{
 test('programme data exposes published records only',()=>{const records=JSON.parse(fs.readFileSync('dist/data/programmes.json','utf8'));assert.ok(Array.isArray(records));for(const r of records){assert.equal(r.published,true);assert.deepEqual(Object.keys(r).sort(),['description','end','published','start','title']);}});
 
 test('media data exports published allowlisted records',()=>{const records=JSON.parse(fs.readFileSync('dist/data/media-resources.json','utf8'));assert.ok(Array.isArray(records));for(const r of records){assert.equal(r.published,true);assert.deepEqual(Object.keys(r).sort(),['description','format','published','title','url']);}});
+
+test('public artifact excludes administration code',()=>{assert.equal(fs.existsSync('dist/js/administration.js'),false);assert.equal(fs.existsSync('dist/css/administration.css'),false);});
