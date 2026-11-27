@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createLoginAttemptStore,loginCookie,clearLoginCookie} from '../../apps/api/src/login-attempt-store.mjs';
+import {authorisationUrl} from '../../apps/api/src/login-authorisation.mjs';
+import {digest} from '../../apps/api/src/session-security.mjs';
+test('login secrets are browser bound, hashed and consumed using one delete statement',async()=>{
+ const calls=[];
+ const store=createLoginAttemptStore({query:async(sql,args)=>{calls.push({sql,args});return {rows:[{nonce:'fixture',verifier:'fixture'}],rowCount:1};}});
+ const a=await store.begin();
+ assert.equal(calls[0].args[0],digest(a.state));assert.equal(calls[0].args[1],digest(a.browser));assert.equal(a.verifier,undefined);
+ assert.equal(await store.consume(a.state,'invalid'),null);
+ await store.consume(a.state,a.browser);
+ assert.match(calls[1].sql,/DELETE FROM/);assert.match(calls[1].sql,/expires_at>now/);assert.deepEqual(calls[1].args,[digest(a.state),digest(a.browser)]);
+ assert.match(loginCookie(a.browser),/Secure; HttpOnly; SameSite=Lax; Max-Age=300/);
+ assert.match(clearLoginCookie(),/Max-Age=0/);
+ const config={authorisationEndpoint:'https://issuer.example/authorize',redirectUri:'https://admin.example/auth/callback',clientId:'fixture'};
+ const url=new URL(authorisationUrl(config,a));
+ assert.equal(url.searchParams.get('code_challenge_method'),'S256');assert.equal(url.searchParams.get('response_type'),'code');assert.equal(url.searchParams.get('state'),a.state);assert.equal(url.searchParams.get('nonce'),a.nonce);assert.equal(url.searchParams.get('code_verifier'),null);
+ assert.throws(()=>authorisationUrl({...config,redirectUri:'http://admin.example/callback'},a));
+});
