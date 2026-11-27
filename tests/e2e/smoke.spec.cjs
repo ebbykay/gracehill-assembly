@@ -23,3 +23,13 @@ test('public navigation never includes admin',async({page})=>{
  await page.goto('/index.html');
  await expect(page.locator('a[href*="admin.html"]')).toHaveCount(0);
 });
+
+test('homepage visitor journey',async({page})=>{
+ await page.goto('/index.html');
+ await expect(page.locator('main h1')).toHaveText('Raising Kingdom Giants');
+ await expect(page.locator('.hero').getByRole('link',{name:'Plan Your Visit'})).toHaveAttribute('href','contact.html');
+ await expect(page.locator('.home-visit-panel')).toBeVisible();
+ await expect(page.locator('.stats-container')).toHaveCount(0);
+ await page.locator('.hero').getByRole('link',{name:'Plan Your Visit'}).click();
+ await expect(page).toHaveURL(/contact\.html$/);
+});
