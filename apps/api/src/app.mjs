@@ -1,7 +1,7 @@
 import {createServer} from 'node:http';
 import {randomUUID} from 'node:crypto';
 import {authenticate,can} from './access.mjs';
-export function createApp({logger=()=>{},verifyToken,dbHealth=async()=>false,audit}={}){
+export function createApp({logger=()=>{},verifyToken,dbHealth=async()=>false,audit,adminAuth}={}){
  return createServer(async (req,res)=>{
  const id=randomUUID();
  const started=Date.now();
@@ -12,7 +12,9 @@ export function createApp({logger=()=>{},verifyToken,dbHealth=async()=>false,aud
  res.on('finish',()=>logger({requestId:id,method:req.method,status:res.statusCode,durationMs:Date.now()-started}));
  const send=(status,body)=>{res.statusCode=status;res.end(JSON.stringify(body));};
  try{
- const pathname=new URL(req.url,'http://localhost').pathname;
+ const url=new URL(req.url,'http://localhost');
+ const pathname=url.pathname;
+ if(adminAuth&&await adminAuth(req,res,url,send))return;
  if(pathname==='/health/live'){
  if(req.method!=='GET'){res.setHeader('Allow','GET');return send(405,{error:'method_not_allowed',requestId:id});}
  return send(200,{status:'ok',service:'gracehill-api'});
