@@ -16,3 +16,5 @@ jobs:
 
       - run: node --test tests/integration/api.test.mjs
       - run: node scripts/build-admin-preview.mjs
+
+      - run: node --test tests/integration/access.test.mjs
