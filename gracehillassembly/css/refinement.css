@@ -37,3 +37,11 @@ body, button, input, select, textarea, table { font-family: 'Segoe UI', system-u
 .department-page > .admin-header { justify-content: flex-end; }
 .admin-table button.btn-small { border: 1px solid var(--border); background: var(--surface); color: var(--text-primary); border-radius: 6px; min-width: 44px; min-height: 44px; cursor: pointer; }
 @media(max-width:768px) { .event-list-item { grid-template-columns: 1fr; text-align: left; } .event-date-box { margin: 0; } .event-meta { align-items: flex-start; } .calendar-container .fc-toolbar { flex-wrap: wrap; gap: .75rem; } }
+
+.admin-topbar .header-container { justify-content: space-between; }
+.admin-return { margin-left: auto; color: var(--text-primary); padding: .65rem; }
+.admin-preview-footer { margin-top: auto; padding: 1rem; text-align: center; background: var(--surface); color: var(--text-secondary); border-top: 1px solid var(--border); }
+button.admin-nav-item { width: 100%; border: 0; background: transparent; color: var(--text-primary); text-align: left; font: inherit; min-height: 44px; }
+button.admin-nav-item.active { background: var(--background); color: var(--primary); font-weight: 600; }
+@media(max-width:900px) { button.admin-nav-item { width: auto; } }
+@media(max-width:600px) { .admin-topbar .header-container { flex-wrap: wrap; } .admin-return { margin-left: 0; } }
