@@ -1,6 +1,10 @@
 import {readConfig} from './config.mjs';
 import {createApp} from './app.mjs';
+import {openDatabase,databaseAvailable} from './database.mjs';
+import {createIdentityStore} from './identity-store.mjs';
 const {host,port}=readConfig();
-const server=createApp({logger:entry=>console.log(JSON.stringify(entry))});
+const db=await openDatabase(process.env.DATABASE_URL);
+const store=db?createIdentityStore(db):null;
+const server=createApp({dbHealth:()=>databaseAvailable(db),audit:store?.recordAudit,logger:entry=>console.log(JSON.stringify(entry))});
 server.listen(port,host,()=>console.log(JSON.stringify({event:'api_started',host,port})));
-for(const signal of ['SIGTERM','SIGINT'])process.once(signal,()=>{server.close(()=>process.exit(0));});
+for(const signal of ['SIGTERM','SIGINT'])process.once(signal,()=>{server.close(async()=>{if(db)await db.end();process.exit(0)});});
