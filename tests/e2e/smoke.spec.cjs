@@ -55,3 +55,16 @@ test('ministries category navigation and participation',async({page})=>{
  await page.getByRole('link',{name:'Ask About Serving'}).click();
  await expect(page).toHaveURL(/contact\.html$/);
 });
+
+test('programme filters distinguish past and future published events',async({page})=>{
+ const record=(title,start,end,published=true)=>({title,start,end,published,description:'Test fixture'});
+ await page.route('**/data/programmes.json',route=>route.fulfill({json:[record('Future fixture','2099-01-01T09:00:00Z','2099-01-01T11:00:00Z'),record('Past fixture','2000-01-01T09:00:00Z','2000-01-01T11:00:00Z'),record('Draft fixture','2099-01-01T09:00:00Z','2099-01-01T11:00:00Z',false)]}));
+ await page.goto('/events.html');
+ await expect(page.locator('#programme-list')).toContainText('Future fixture');
+ await expect(page.locator('#programme-list article')).toHaveCount(1);
+ await page.getByRole('button',{name:'Past',exact:true}).click();
+ await expect(page.locator('#programme-list')).toContainText('Past fixture');
+ await page.getByRole('button',{name:'All programmes'}).click();
+ await expect(page.locator('#programme-list article')).toHaveCount(2);
+ await expect(page.locator('#programme-list')).not.toContainText('Draft fixture');
+});
