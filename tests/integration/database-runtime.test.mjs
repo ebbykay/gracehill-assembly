@@ -34,3 +34,22 @@ test('real PostgreSQL runtime privileges and persistence',{skip:!process.env.DAT
  assert.equal(result.rows[0].outcome,'allowed');
  }finally{await client.query('ROLLBACK');client.release();}
 });
+
+test('login attempt consumption is atomic and browser bound',{skip:!process.env.DATABASE_URL},async t=>{
+ const {createLoginAttemptStore}=await import('../../apps/api/src/login-attempt-store.mjs');
+ const pool=await openDatabase(process.env.DATABASE_URL);
+ t.after(()=>pool.end());
+ const client=await pool.connect();
+ try{
+ await client.query('BEGIN');
+ await client.query('SET LOCAL ROLE gracehill_runtime');
+ const store=createLoginAttemptStore(client);
+ const a=await store.begin();
+ const b=await store.begin();
+ assert.equal(await store.consume(a.state,b.browser),null);
+ const consumed=await store.consume(a.state,a.browser);
+ assert.equal(consumed.nonce,a.nonce);
+ assert.equal(await store.consume(a.state,a.browser),null);
+ await client.query('ROLLBACK');
+ }finally{await client.query('ROLLBACK');client.release();}
+});
