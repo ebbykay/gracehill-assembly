@@ -9,6 +9,6 @@ for (const name of ['index','about','ministries','events','media','contact']) {
 }
 fs.cpSync('packages/ui/css',path.join(out,'css'),{recursive:true});
 fs.cpSync('packages/shared/js',path.join(out,'js'),{recursive:true});
-fs.copyFileSync('gracehillassembly/church logo.png',path.join(out,'church logo.png'));
+fs.copyFileSync('assets/branding/church logo.png',path.join(out,'church logo.png'));
 fs.writeFileSync(path.join(out,'.nojekyll'),'');
 console.log('Public website assembled; admin and archive excluded.');
