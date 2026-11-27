@@ -81,3 +81,17 @@ test('media search and format filters exclude drafts and unsafe URLs',async({pag
  await expect(page.locator('#media-library article')).toHaveCount(0);
  await expect(page.locator('#media-status')).toContainText('No published resources');
 });
+
+test('contact page protects personal information and supports keyboard FAQ navigation',async({page})=>{
+ await page.goto('/contact.html');
+ await expect(page.locator('main h1')).toHaveText('Get in Touch');
+ await expect(page.locator('main form, main input, main textarea')).toHaveCount(0);
+ await expect(page.locator('main iframe')).toHaveCount(0);
+ const question=page.getByText('When should I arrive for service?',{exact:true});
+ await question.focus();
+ await page.keyboard.press('Enter');
+ await expect(page.locator('.contact-faq details').first()).toHaveAttribute('open','');
+ await expect(page.getByRole('link',{name:'Search for directions'})).toHaveAttribute('href',/^https:\/\/www\.google\.com\/maps\/search\//);
+ await page.getByRole('link',{name:'Explore Ministries',exact:true}).click();
+ await expect(page).toHaveURL(/ministries\.html$/);
+});
