@@ -20,3 +20,7 @@ jobs:
       - run: node --test tests/integration/access.test.mjs
 
       - run: node --test tests/integration/identity-store.test.mjs
+
+      - run: npm install --prefix apps/api --ignore-scripts --no-audit --no-fund
+      - run: node --test apps/api/src/token-verifier.test.mjs
+      - run: npm audit --prefix apps/api --omit=dev --audit-level=high
