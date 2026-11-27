@@ -11,3 +11,5 @@ jobs:
         with:
           node-version: '24'
       - run: node scripts/check.mjs
+      - run: node scripts/build-pages.mjs
+      - run: node --test tests/integration/pages.test.mjs
