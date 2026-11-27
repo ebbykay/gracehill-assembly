@@ -20,5 +20,8 @@ fs.mkdirSync(path.join(out,'data'),{recursive:true});
 const programmes=JSON.parse(fs.readFileSync('apps/website/data/programmes.json','utf8'));
 if(!Array.isArray(programmes)) throw new Error('Invalid programme data');
 fs.writeFileSync(path.join(out,'data/programmes.json'),JSON.stringify(programmes.filter(e=>e.published===true).map(({title,description,start,end})=>({title,description,start,end,published:true}))));
+const media=JSON.parse(fs.readFileSync('apps/website/data/media-resources.json','utf8'));
+if(!Array.isArray(media)) throw new Error('Invalid media data');
+fs.writeFileSync(path.join(out,'data/media-resources.json'),JSON.stringify(media.filter(e=>e&&e.published===true).map(({title,description,format,url})=>({title,description,format,url,published:true}))));
 fs.writeFileSync(path.join(out,'.nojekyll'),'');
 console.log('Public website assembled; admin and archive excluded.');
