@@ -45,3 +45,25 @@ button.admin-nav-item { width: 100%; border: 0; background: transparent; color: 
 button.admin-nav-item.active { background: var(--background); color: var(--primary); font-weight: 600; }
 @media(max-width:900px) { button.admin-nav-item { width: auto; } }
 @media(max-width:600px) { .admin-topbar .header-container { flex-wrap: wrap; } .admin-return { margin-left: 0; } }
+
+/* Shared design tokens: semantic roles, spacing and interaction. */
+:root {
+  --brand-navy: #142e65;
+  --brand-gold: #d4af37;
+  --space-xs: .5rem;
+  --space-sm: .75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --radius-control: 7px;
+  --radius-card: 16px;
+  --font-body: 'Segoe UI', system-ui, sans-serif;
+  --font-heading: 'Playfair Display', Georgia, serif;
+}
+body, button, input, select, textarea, table { font-family: var(--font-body); }
+h1,h2,h3,h4,h5,h6 { font-family: var(--font-heading); }
+.btn { border-radius: var(--radius-control); }
+.card,.ministry-card,.video-card,.contact-info-card,.form-container { border-radius: var(--radius-card); }
+.btn:disabled, button:disabled { opacity: .65; cursor: not-allowed; }
+[data-form-status] { flex-basis: 100%; margin: var(--space-sm) 0; color: var(--text-secondary); }
+.gallery-unavailable { padding: var(--space-xl); background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-card); text-align: center; }

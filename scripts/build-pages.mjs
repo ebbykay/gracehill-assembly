@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 const out = 'dist';
+fs.rmSync(out,{recursive:true,force:true});
 fs.mkdirSync(out,{recursive:true});
 for (const name of ['index','about','ministries','events','media','contact']) {
   const source = fs.readFileSync('apps/website/'+name+'.html','utf8');
