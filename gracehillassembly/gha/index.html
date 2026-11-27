@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gracehill Assembly - A vibrant Spirit-filled church raising Kingdom Giants for Christ. Join us for worship, prayer, and fellowship.">
+    <title>Gracehill Assembly - Home | Raising Kingdom Giants</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Homepage Specific Styles -->
+    <style>
+        /* Homepage Hero */
+        .hero-home {
+            background: linear-gradient(135deg, rgba(13, 46, 110, 0.96) 0%, rgba(10, 22, 60, 0.88) 100%),
+                        url('../images/hero/church-hero.jpg') center/cover no-repeat;
+            min-height: 90vh;
+        }
+        
+        .welcome-section {
+            text-align: center;
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+        
+        .featured-events {
+            background: var(--surface);
+            padding: 4rem 0;
+        }
+        
+        .event-highlight {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .event-item {
+            background: var(--background);
+            padding: 2rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .event-item h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .event-item .date {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+        
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+            text-align: center;
+        }
+        
+        .stat-item {
+            padding: 2rem;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        
+        .cta-banner {
+            background: linear-gradient(135deg, #0d2e6e, #1a4a9c);
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+            border-radius: 12px;
+            margin: 4rem 0;
+        }
+        
+        .cta-banner h2 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-banner p {
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <div class="logo-img">GHA</div>
+                <div class="logo-text">GRACEHILL ASSEMBLY</div>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <a href="index.html" class="active">Home</a>
+                <a href="about.html">About</a>
+                <a href="ministries.html">Ministries</a>
+                <a href="events.html">Events</a>
+                <a href="media.html">Media</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Theme Banner -->
+    <div class="theme-banner">
+        <div class="container">
+            <i class="fas fa-cross"></i> 2025 OUR YEAR OF SERVING THE LORD <i class="fas fa-cross"></i>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero hero-home">
+        <div class="hero-content">
+            <h1>Welcome To GRACEHILL ASSEMBLY</h1>
+            <p>A vibrant, Spirit-filled church raising Kingdom Ambassadors to impact the world through the Word, prayer, worship, and service. Join a family where destinies are transformed and lives encounter Jesus.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="contact.html" class="btn btn-large">
+                    Join Us This Sunday
+                </a>
+                <a href="ministries.html" class="btn btn-outline btn-large">
+                    Get Involved
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Kingdom Mandate Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>Our Kingdom Mandate</h2>
+                <p>At Gracehill Assembly, everything we do is built on three key pillars that shape our culture, empower our members, and drive our mission.</p>
+            </div>
+
+            <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); max-width: 960px; margin: 0 auto;">
+                <div class="card" data-animate style="text-align:center;">
+                    <div class="card-icon"><i class="fas fa-bible"></i></div>
+                    <h3>Word</h3>
+                    <p>We are committed to the sound teaching of God's Word, equipping believers to grow spiritually and live out Kingdom principles in everyday life.</p>
+                </div>
+
+                <div class="card" data-animate style="text-align:center;">
+                    <div class="card-icon"><i class="fas fa-praying-hands"></i></div>
+                    <h3>Prayer</h3>
+                    <p>Prayer is the heartbeat of Gracehill. We believe in prevailing prayer that births revival, aligns destinies, and shifts atmospheres.</p>
+                </div>
+
+                <div class="card" data-animate style="text-align:center;">
+                    <div class="card-icon"><i class="fas fa-hands-helping"></i></div>
+                    <h3>Fellowship &amp; Service</h3>
+                    <p>We are a family of faith, walking in love, building each other up, and reaching the world through evangelism, service, and Kingdom impact.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="container">
+        <div class="cta-banner" data-animate>
+            <h2>Be Part of the Gracehill Family</h2>
+            <p>Join us every Sunday at 8:30 AM at Broadcasting Junction, Weija — and experience an atmosphere of worship, Word, and power. We are ready to grow with you.</p>
+            <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                <a href="contact.html" class="btn btn-large">
+                    Plan Your Visit
+                </a>
+                <a href="about.html" class="btn btn-outline btn-large">
+                    Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Gracehill Assembly</h3>
+                    <p>Raising Kingdom Ambassadors through the Word, prayer, and fellowship. A place to grow, serve, and make impact.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="ministries.html">Ministries</a></li>
+                        <li><a href="media.html">Sermons</a></li>
+                        <li><a href="events.html">Events</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:gracehillassembly@gmail.com"><i class="fas fa-envelope"></i> gracehillassembly@gmail.com</a></li>
+                        <li><a href="tel:+233207362469"><i class="fas fa-phone"></i> +233 20 736 2469</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Broadcasting Junction, Opposite A.F. Electricals, Weija – Accra, Ghana</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="social-links">
+                <a href="https://www.facebook.com/ram111111111/" target="_blank" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/gracehill_assembly/" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.tiktok.com/@gracehill_assembly/" target="_blank" aria-label="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="https://www.youtube.com/gracehill_assembly/" target="_blank" aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Gracehill Assembly. All Rights Reserved. | 2025: Our Year of Serving the Lord</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script data-cfasync
