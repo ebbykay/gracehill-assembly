@@ -17,3 +17,13 @@ test('public navigation and shared resources resolve',()=>{
  }
 });
 test('logo is not empty',()=>assert.ok(fs.statSync('dist/gracehill-logo.png').size>0));
+
+test('shared layout renders exactly once and marks current page',()=>{
+ for(const name of pages){
+ const html=fs.readFileSync('dist/'+name+'.html','utf8');
+ assert.equal([...html.matchAll(/<header\b/g)].length,1);
+ assert.equal([...html.matchAll(/<footer\b/g)].length,1);
+ assert.match(html,new RegExp('href="'+name+'\\.html" class="active" aria-current="page"'));
+ assert.doesNotMatch(html,/<!-- SITE_(HEADER|FOOTER) -->/);
+ }
+});
