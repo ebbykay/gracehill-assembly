@@ -1,2 +1,5 @@
-# Migrations
-0001_editorial_foundation.sql defines programme and media editorial tables with draft defaults and constraints. Apply only to an isolated PostgreSQL test database until deployment and role design are approved. No migration runner or production deployment is configured. The API does not yet connect to these tables.
+# Database migrations
+
+PostgreSQL 17 is the initial CI target. Use only an isolated development database with no real records. Set DATABASE_URL securely and GRACEHILL_MIGRATION_TARGET=development, then run `bash scripts/migrate-database.sh` from the repository root. The runner requires psql, Bash and sha256sum. It serialises runs using an advisory lock and records each migration checksum in the same transaction as its SQL. Applied files are immutable; create a new numbered migration for changes. Files must begin with BEGIN; and end with COMMIT; on separate exact lines. The runner replaces these boundaries to include the tracking insert. Never include nested transaction controls or psql meta-commands in migration files.
+
+CI applies migrations twice, verifies constraints and default privileges using synthetic records rolled back after tests, and checks that modified applied migrations are rejected. Production migration credentials, backups, role grants and deployment approval are not configured. The API is not yet connected to the database.
