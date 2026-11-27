@@ -32,3 +32,5 @@ jobs:
       - run: node --test apps/api/src/login-callback.test.mjs
 
       - run: node --test tests/integration/admin-auth-http.test.mjs
+
+      - run: node --test tests/integration/admin-runtime.test.mjs
