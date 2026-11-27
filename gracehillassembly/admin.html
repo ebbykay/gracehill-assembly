@@ -454,31 +454,31 @@
             </div>
             
             <div class="admin-nav">
-                <div class="admin-nav-item active" onclick="showDepartment('dashboard')">
+                <div class="admin-nav-item active" onclick="showDepartment('dashboard', this)">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
                 </div>
-                <div class="admin-nav-item" onclick="showDepartment('membership')">
+                <div class="admin-nav-item" onclick="showDepartment('membership', this)">
                     <i class="fas fa-users"></i>
                     <span>Membership</span>
                 </div>
-                <div class="admin-nav-item" onclick="showDepartment('finance')">
+                <div class="admin-nav-item" onclick="showDepartment('finance', this)">
                     <i class="fas fa-chart-line"></i>
                     <span>Finance</span>
                 </div>
-                <div class="admin-nav-item" onclick="showDepartment('events')">
+                <div class="admin-nav-item" onclick="showDepartment('events', this)">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Events</span>
                 </div>
-                <div class="admin-nav-item" onclick="showDepartment('ministry')">
+                <div class="admin-nav-item" onclick="showDepartment('ministry', this)">
                     <i class="fas fa-hands-helping"></i>
                     <span>Ministries</span>
                 </div>
-                <div class="admin-nav-item" onclick="showDepartment('reports')">
+                <div class="admin-nav-item" onclick="showDepartment('reports', this)">
                     <i class="fas fa-chart-pie"></i>
                     <span>Reports</span>
                 </div>
-                <div class="admin-nav-item" onclick="showDepartment('settings')">
+                <div class="admin-nav-item" onclick="showDepartment('settings', this)">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
                 </div>
@@ -493,7 +493,7 @@
         <main class="admin-content">
             <!-- Dashboard Header -->
             <div class="admin-header">
-                <h2>Dashboard</h2>
+                <h1 id="adminPageTitle">Dashboard</h1>
                 <div class="admin-header-actions">
                     <button class="btn btn-small" onclick="refreshData()">
                         <i class="fas fa-sync-alt"></i> Refresh
@@ -549,19 +549,19 @@
                 <!-- Quick Actions -->
                 <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
                 <div class="quick-actions">
-                    <div class="action-btn" onclick="showDepartment('membership')">
+                    <div class="action-btn" onclick="showDepartment('membership', this)">
                         <i class="fas fa-user-plus"></i>
                         <span>Add Member</span>
                     </div>
-                    <div class="action-btn" onclick="showDepartment('finance')">
+                    <div class="action-btn" onclick="showDepartment('finance', this)">
                         <i class="fas fa-plus-circle"></i>
                         <span>Record Income</span>
                     </div>
-                    <div class="action-btn" onclick="showDepartment('events')">
+                    <div class="action-btn" onclick="showDepartment('events', this)">
                         <i class="fas fa-calendar-plus"></i>
                         <span>Create Event</span>
                     </div>
-                    <div class="action-btn" onclick="showDepartment('ministry')">
+                    <div class="action-btn" onclick="showDepartment('ministry', this)">
                         <i class="fas fa-user-friends"></i>
                         <span>Schedule Volunteer</span>
                     </div>
@@ -617,7 +617,7 @@
             <!-- Membership Department -->
             <div class="department-page" id="membershipDept">
                 <div class="admin-header">
-                    <h2>Membership Management</h2>
+                    
                     <button class="btn btn-small" onclick="showAddMemberForm()">
                         <i class="fas fa-plus"></i> Add Member
                     </button>
@@ -678,7 +678,7 @@
             <!-- Finance Department -->
             <div class="department-page" id="financeDept">
                 <div class="admin-header">
-                    <h2>Financial Management</h2>
+                    
                     <button class="btn btn-small" onclick="recordTransaction()">
                         <i class="fas fa-plus"></i> Record Transaction
                     </button>
@@ -786,7 +786,7 @@
             <!-- Events Department -->
             <div class="department-page" id="eventsDept">
                 <div class="admin-header">
-                    <h2>Events Management</h2>
+                    
                     <button class="btn btn-small" onclick="createEvent()">
                         <i class="fas fa-plus"></i> Create Event
                     </button>
@@ -837,7 +837,7 @@
             <!-- Ministry Department -->
             <div class="department-page" id="ministryDept">
                 <div class="admin-header">
-                    <h2>Ministry Management</h2>
+                    
                     <button class="btn btn-small" onclick="addVolunteer()">
                         <i class="fas fa-plus"></i> Add Volunteer
                     </button>
@@ -913,9 +913,7 @@
 
             <!-- Reports Department -->
             <div class="department-page" id="reportsDept">
-                <div class="admin-header">
-                    <h2>Reports & Analytics</h2>
-                </div>
+                
 
                 <div class="quick-actions">
                     <div class="action-btn" onclick="generateReport('membership')">
@@ -965,9 +963,7 @@
 
             <!-- Settings Department -->
             <div class="department-page" id="settingsDept">
-                <div class="admin-header">
-                    <h2>Settings</h2>
-                </div>
+                
 
                 <div class="admin-form">
                     <h3 style="margin-bottom: 1.5rem;">Church Information</h3>
@@ -1104,12 +1100,12 @@
         }
         
         // Show Department
-        function showDepartment(department) {
+        function showDepartment(department, trigger) {
             // Update active nav item
             document.querySelectorAll('.admin-nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            event.currentTarget.classList.add('active');
+            trigger?.classList.add('active');
             
             // Show corresponding department page
             document.querySelectorAll('.department-page').forEach(page => {
@@ -1127,7 +1123,7 @@
                 reports: 'Reports & Analytics',
                 settings: 'Settings'
             };
-            document.querySelector('.admin-header h2').textContent = titles[department];
+            document.getElementById('adminPageTitle').textContent = titles[department];
             
             // Close sidebar on mobile
             if (window.innerWidth <= 768) {
