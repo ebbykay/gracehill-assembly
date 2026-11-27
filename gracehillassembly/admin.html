@@ -375,68 +375,15 @@
 </head>
 <body>
     <!-- Header (simplified for admin) -->
-    <header>
-        <div class="container header-container">
-            <a href="index.html" class="logo-container">
-                <div class="logo-img">GHA</div>
-                <div class="logo-text">GRACEHILL ASSEMBLY</div>
-            </a>
-            
-            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="about.html">About</a>
-                <a href="ministries.html">Ministries</a>
-                <a href="events.html">Events</a>
-                <a href="media.html">Media</a>
-                <a href="contact.html">Contact</a>
-            </nav>
-            
-            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
-                <i class="fas fa-moon"></i>
-            </button>
-        </div>
-    </header>
-
-    <!-- Theme Banner -->
-    <div class="theme-banner">
-        <div class="container">
-            <i class="fas fa-cross"></i> 2025 OUR YEAR OF SERVING THE LORD <i class="fas fa-cross"></i>
-        </div>
-    </div>
+    <header class="admin-topbar"><div class="container header-container"><a href="index.html" class="logo-container"><div class="logo-img" aria-hidden="true">GHA</div><span class="logo-text">GRACEHILL ADMINISTRATION</span></a><a class="admin-return" href="index.html">Public website</a><button class="theme-toggle" id="themeToggle" aria-label="Toggle theme"><i class="fas fa-moon" aria-hidden="true"></i></button></div></header>
 
     <!-- Login Section -->
     <section class="login-section" id="loginSection">
         <h2>Church Admin Portal</h2>
         <p>Design preview only. Sign-in and record management are not connected. Do not enter real credentials or personal information.</p>
-        <p style="margin-bottom: 2rem; color: var(--text-muted);">Secure access for church staff and leadership</p>
+        <p>All displayed records are demonstration data; this is not an authenticated service.</p>
         
-        <form class="login-form" id="loginForm">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" required>
-            </div>
-            <div class="form-group">
-                <label for="role">Access Level</label>
-                <select id="role" required>
-                    <option value="">Select Role</option>
-                    <option value="pastor">Senior Pastor</option>
-                    <option value="admin">Church Administrator</option>
-                    <option value="finance">Finance Team</option>
-                    <option value="membership">Membership Director</option>
-                    <option value="ministry">Ministry Leader</option>
-                    <option value="events">Events Coordinator</option>
-                </select>
-            </div>
-            <button type="submit" class="btn">Login to Dashboard</button>
-        </form>
+        <button type="button" class="btn" id="openPreview">Open demonstration dashboard</button>
     </section>
 
     <!-- Admin Dashboard (Hidden until login) -->
@@ -454,38 +401,38 @@
             </div>
             
             <div class="admin-nav">
-                <div class="admin-nav-item active" onclick="showDepartment('dashboard')">
+                <button type="button" class="admin-nav-item active" data-department="dashboard" onclick="showDepartment('dashboard')">
                     <i class="fas fa-home"></i>
                     <span>Dashboard</span>
-                </div>
-                <div class="admin-nav-item" onclick="showDepartment('membership')">
+                </button>
+                <button type="button" class="admin-nav-item" data-department="membership" onclick="showDepartment('membership')">
                     <i class="fas fa-users"></i>
                     <span>Membership</span>
-                </div>
-                <div class="admin-nav-item" onclick="showDepartment('finance')">
+                </button>
+                <button type="button" class="admin-nav-item" data-department="finance" onclick="showDepartment('finance')">
                     <i class="fas fa-chart-line"></i>
                     <span>Finance</span>
-                </div>
-                <div class="admin-nav-item" onclick="showDepartment('events')">
+                </button>
+                <button type="button" class="admin-nav-item" data-department="events" onclick="showDepartment('events')">
                     <i class="fas fa-calendar-alt"></i>
                     <span>Events</span>
-                </div>
-                <div class="admin-nav-item" onclick="showDepartment('ministry')">
+                </button>
+                <button type="button" class="admin-nav-item" data-department="ministry" onclick="showDepartment('ministry')">
                     <i class="fas fa-hands-helping"></i>
                     <span>Ministries</span>
-                </div>
-                <div class="admin-nav-item" onclick="showDepartment('reports')">
+                </button>
+                <button type="button" class="admin-nav-item" data-department="reports" onclick="showDepartment('reports')">
                     <i class="fas fa-chart-pie"></i>
                     <span>Reports</span>
-                </div>
-                <div class="admin-nav-item" onclick="showDepartment('settings')">
+                </button>
+                <button type="button" class="admin-nav-item" data-department="settings" onclick="showDepartment('settings')">
                     <i class="fas fa-cog"></i>
                     <span>Settings</span>
-                </div>
-                <div class="admin-nav-item" onclick="logout()">
+                </button>
+                <button type="button" class="admin-nav-item" onclick="logout()">
                     <i class="fas fa-sign-out-alt"></i>
                     <span>Logout</span>
-                </div>
+                </button>
             </div>
         </aside>
 
@@ -493,7 +440,7 @@
         <main class="admin-content">
             <!-- Dashboard Header -->
             <div class="admin-header">
-                <h2>Dashboard</h2>
+                <h1 id="adminPageTitle">Dashboard</h1>
                 <div class="admin-header-actions">
                     <button class="btn btn-small" onclick="refreshData()">
                         <i class="fas fa-sync-alt"></i> Refresh
@@ -549,19 +496,19 @@
                 <!-- Quick Actions -->
                 <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
                 <div class="quick-actions">
-                    <div class="action-btn" onclick="showDepartment('membership')">
+                    <div class="action-btn" onclick="showDepartment('membership', this)">
                         <i class="fas fa-user-plus"></i>
                         <span>Add Member</span>
                     </div>
-                    <div class="action-btn" onclick="showDepartment('finance')">
+                    <div class="action-btn" onclick="showDepartment('finance', this)">
                         <i class="fas fa-plus-circle"></i>
                         <span>Record Income</span>
                     </div>
-                    <div class="action-btn" onclick="showDepartment('events')">
+                    <div class="action-btn" onclick="showDepartment('events', this)">
                         <i class="fas fa-calendar-plus"></i>
                         <span>Create Event</span>
                     </div>
-                    <div class="action-btn" onclick="showDepartment('ministry')">
+                    <div class="action-btn" onclick="showDepartment('ministry', this)">
                         <i class="fas fa-user-friends"></i>
                         <span>Schedule Volunteer</span>
                     </div>
@@ -617,7 +564,7 @@
             <!-- Membership Department -->
             <div class="department-page" id="membershipDept">
                 <div class="admin-header">
-                    <h2>Membership Management</h2>
+                    
                     <button class="btn btn-small" onclick="showAddMemberForm()">
                         <i class="fas fa-plus"></i> Add Member
                     </button>
@@ -678,7 +625,7 @@
             <!-- Finance Department -->
             <div class="department-page" id="financeDept">
                 <div class="admin-header">
-                    <h2>Financial Management</h2>
+                    
                     <button class="btn btn-small" onclick="recordTransaction()">
                         <i class="fas fa-plus"></i> Record Transaction
                     </button>
@@ -786,7 +733,7 @@
             <!-- Events Department -->
             <div class="department-page" id="eventsDept">
                 <div class="admin-header">
-                    <h2>Events Management</h2>
+                    
                     <button class="btn btn-small" onclick="createEvent()">
                         <i class="fas fa-plus"></i> Create Event
                     </button>
@@ -837,7 +784,7 @@
             <!-- Ministry Department -->
             <div class="department-page" id="ministryDept">
                 <div class="admin-header">
-                    <h2>Ministry Management</h2>
+                    
                     <button class="btn btn-small" onclick="addVolunteer()">
                         <i class="fas fa-plus"></i> Add Volunteer
                     </button>
@@ -913,9 +860,7 @@
 
             <!-- Reports Department -->
             <div class="department-page" id="reportsDept">
-                <div class="admin-header">
-                    <h2>Reports & Analytics</h2>
-                </div>
+                
 
                 <div class="quick-actions">
                     <div class="action-btn" onclick="generateReport('membership')">
@@ -965,9 +910,7 @@
 
             <!-- Settings Department -->
             <div class="department-page" id="settingsDept">
-                <div class="admin-header">
-                    <h2>Settings</h2>
-                </div>
+                
 
                 <div class="admin-form">
                     <h3 style="margin-bottom: 1.5rem;">Church Information</h3>
@@ -1013,55 +956,7 @@
     </div>
 
     <!-- Footer (same as index.html) -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>Gracehill Assembly</h3>
-                    <p>Raising Kingdom Giants through the Word, prayer, and fellowship. A place to grow, serve, and make impact.</p>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Quick Links</h3>
-                    <ul class="footer-links">
-                        <li><a href="about.html">About Us</a></li>
-                        <li><a href="ministries.html">Ministries</a></li>
-                        <li><a href="events.html">Events</a></li>
-                        <li><a href="media.html">Media</a></li>
-                        <li><a href="contact.html">Contact</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Contact</h3>
-                    <ul class="footer-links">
-                        <li><a href="mailto:info@gracehillassembly.org"><i class="fas fa-envelope"></i> info@gracehillassembly.org</a></li>
-                        <li><a href="tel:+233207362469"><i class="fas fa-phone"></i> +233 20 736 2469</a></li>
-                        <li><i class="fas fa-map-marker-alt"></i> Broadcasting Junction, Weija – Accra, Ghana</li>
-                    </ul>
-                </div>
-            </div>
-            
-            <div class="social-links">
-                <a href="https://www.facebook.com/ram111111111/" target="_blank" aria-label="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://www.instagram.com/gracehill_assembly/" target="_blank" aria-label="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://www.tiktok.com/@gracehill_assembly/" target="_blank" aria-label="TikTok">
-                    <i class="fab fa-tiktok"></i>
-                </a>
-                <a href="https://www.youtube.com/gracehill_assembly/" target="_blank" aria-label="YouTube">
-                    <i class="fab fa-youtube"></i>
-                </a>
-            </div>
-            
-            <div class="copyright">
-                <p>&copy; 2025 Gracehill Assembly. All Rights Reserved. | 2025: Our Year of Serving the Lord</p>
-            </div>
-        </div>
-    </footer>
+    <footer class="admin-preview-footer">Gracehill Assembly · Administration design preview · No live records</footer>
 
     <!-- Scripts -->
     <script src="js/theme.js"></script>
@@ -1070,46 +965,32 @@
         // Admin Portal Scripts
         let currentUser = null;
         
-        // Login Form Handler
-        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
-            const role = document.getElementById('role').value;
-            
-            if (username && password && role) {
-                currentUser = { username, role };
-                
-                // Hide login, show dashboard
-                document.getElementById('loginSection').style.display = 'none';
-                document.getElementById('adminDashboard').style.display = 'flex';
-                
-                // Update user info
-                document.getElementById('adminUserName').textContent = username;
-                document.getElementById('adminUserRole').textContent = 
-                    role.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-                
-                // Initialize chart
-                initAttendanceChart();
-            }
+        // Demonstration only: no credentials are requested or stored.
+        document.getElementById('openPreview').addEventListener('click', () => {
+            currentUser = { role: 'preview' };
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('adminDashboard').style.display = 'flex';
+            document.getElementById('adminUserName').textContent = 'Demo user';
+            document.getElementById('adminUserRole').textContent = 'Preview only';
+            showDepartment('dashboard');
+            initAttendanceChart();
         });
-        
+
         // Logout Function
         function logout() {
             currentUser = null;
             document.getElementById('loginSection').style.display = 'block';
             document.getElementById('adminDashboard').style.display = 'none';
-            document.getElementById('loginForm').reset();
+            document.getElementById('openPreview').focus();
         }
         
         // Show Department
-        function showDepartment(department) {
+        function showDepartment(department, trigger) {
             // Update active nav item
             document.querySelectorAll('.admin-nav-item').forEach(item => {
                 item.classList.remove('active');
             });
-            event.currentTarget.classList.add('active');
+            document.querySelector('.admin-nav-item[data-department="' + department + '"]')?.classList.add('active');
             
             // Show corresponding department page
             document.querySelectorAll('.department-page').forEach(page => {
@@ -1127,7 +1008,7 @@
                 reports: 'Reports & Analytics',
                 settings: 'Settings'
             };
-            document.querySelector('.admin-header h2').textContent = titles[department];
+            document.getElementById('adminPageTitle').textContent = titles[department];
             
             // Close sidebar on mobile
             if (window.innerWidth <= 768) {
@@ -1143,7 +1024,8 @@
         // Initialize Attendance Chart
         function initAttendanceChart() {
             const ctx = document.getElementById('attendanceChart')?.getContext('2d');
-            if (ctx) {
+            if (ctx && typeof Chart !== "undefined") {
+                Chart.getChart(ctx.canvas)?.destroy();
                 new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -1211,7 +1093,7 @@
         }
         
         function saveSettings() {
-            alert('Settings saved successfully!');
+            alert('Preview only. No settings were saved.');
         }
         
         function refreshData() {
