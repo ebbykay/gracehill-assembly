@@ -26,3 +26,5 @@ jobs:
       - run: npm audit --prefix apps/api --omit=dev --audit-level=high
 
       - run: node --test tests/integration/session.test.mjs
+
+      - run: node --test tests/integration/login-attempt.test.mjs
