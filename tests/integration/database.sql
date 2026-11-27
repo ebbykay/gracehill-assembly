@@ -48,6 +48,20 @@ BEGIN
  RAISE EXCEPTION 'Referenced identity deleted';
  EXCEPTION WHEN foreign_key_violation THEN NULL; END;
 END $identity_test$;
+DO $session_test$
+DECLARE ident uuid;
+BEGIN
+ INSERT INTO gracehill.identities(issuer,subject,enabled) VALUES ('https://session.example','fixture',true) RETURNING id INTO ident;
+ INSERT INTO gracehill.admin_sessions(token_hash,identity_id,expires_at) VALUES (repeat('a',64),ident,now()+interval '15 minutes');
+ BEGIN
+ INSERT INTO gracehill.admin_sessions(token_hash,identity_id,expires_at) VALUES (repeat('b',64),ident,now()+interval '16 minutes');
+ RAISE EXCEPTION 'Excess session duration accepted';
+ EXCEPTION WHEN check_violation THEN NULL; END;
+ BEGIN
+ INSERT INTO gracehill.admin_sessions(token_hash,identity_id,expires_at) VALUES ('raw-token',ident,now()+interval '15 minutes');
+ RAISE EXCEPTION 'Raw session token accepted';
+ EXCEPTION WHEN check_violation THEN NULL; END;
+END $session_test$;
 CREATE ROLE gracehill_ci_unprivileged NOLOGIN;
 SET LOCAL ROLE gracehill_ci_unprivileged;
 DO $$ BEGIN
