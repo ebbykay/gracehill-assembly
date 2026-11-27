@@ -44,3 +44,14 @@ test('about page presents church purpose and beliefs',async({page})=>{
  await page.getByRole('link',{name:'Plan Your Visit'}).click();
  await expect(page).toHaveURL(/contact\.html$/);
 });
+
+test('ministries category navigation and participation',async({page})=>{
+ await page.goto('/ministries.html');
+ await expect(page.locator('main h1')).toHaveText('Our Ministries');
+ await expect(page.getByRole('navigation',{name:'Ministry categories'}).locator('a')).toHaveCount(5);
+ await expect(page.locator('.ministry-card')).toHaveCount(10);
+ await expect(page.locator('.age-card')).toHaveCount(6);
+ await expect(page.locator('main a[href="#"]')).toHaveCount(0);
+ await page.getByRole('link',{name:'Ask About Serving'}).click();
+ await expect(page).toHaveURL(/contact\.html$/);
+});
