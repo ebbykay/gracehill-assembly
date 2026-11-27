@@ -30,3 +30,16 @@ assert.match(events, /aria-label="Weekly service schedule"/);
 const shared = fs.readFileSync(path.join(root,'js/main.js'),'utf8');
 assert.doesNotMatch(shared, /Message sent successfully!/);
 console.log('PASS: static regression checks for headings, demo credentials, events and delivery messaging.');
+
+const staged = path.resolve(import.meta.dirname,'..');
+for (const name of pages) {
+  const location = name === 'admin' ? 'apps/administration/admin.html' : 'apps/website/'+name+'.html';
+  const html = fs.readFileSync(path.join(staged,location),'utf8');
+  assert.match(html, /<title>[^<]+<\/title>/i);
+  if(name !== 'admin') assert.doesNotMatch(html,/href=["']admin\.html/i);
+  for (const match of html.matchAll(/<script\b([^>]*)>([\s\S]*?)<\/script>/gi)) {
+    if (!/\bsrc\s*=/.test(match[1])) new vm.Script(match[2],{filename:location});
+  }
+}
+for (const name of ['main.js','theme.js']) new vm.Script(fs.readFileSync(path.join(staged,'packages/shared/js',name),'utf8'),{filename:name});
+console.log('PASS: staged application source checks.');
