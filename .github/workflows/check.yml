@@ -13,3 +13,6 @@ jobs:
       - run: node scripts/check.mjs
       - run: node scripts/build-pages.mjs
       - run: node --test tests/integration/pages.test.mjs
+
+      - run: node --test tests/integration/api.test.mjs
+      - run: node scripts/build-admin-preview.mjs
