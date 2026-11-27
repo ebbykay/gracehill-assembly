@@ -1,0 +1,20 @@
+/* Ministries page presentation */
+.ministry-jump-links { display:flex; flex-wrap:wrap; justify-content:center; gap:.75rem; padding-block:1.25rem; }
+.ministry-jump-links a { display:inline-flex; align-items:center; min-height:44px; padding:.6rem 1rem; border:1px solid var(--border); border-radius:7px; color:var(--primary); background:var(--surface); }
+main section[id] { scroll-margin-top:7rem; }
+.ministry-grid,.age-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr)); gap:1.5rem; }
+.ministry-card { overflow:hidden; background:var(--surface); display:flex; flex-direction:column; }
+.ministry-image { position:relative; height:112px; }
+.ministry-image i { position:absolute; inset:0; display:grid; place-items:center; font-size:2.4rem; }
+.ministry-content { display:flex; flex:1; flex-direction:column; gap:.75rem; }
+.ministry-content h3,.age-card h3 { font-size:1.2rem; }
+.ministry-content .btn { align-self:flex-start; margin-top:auto; }
+.age-groups { background:var(--surface); padding:4rem 0; }
+.age-card { padding:1.5rem; background:var(--background); border-radius:16px; border-left:4px solid #d4af37; }
+.age-card i { color:var(--primary); font-size:1.75rem; margin-bottom:.75rem; }
+.ministry-schedule-note { text-align:center; max-width:760px; }
+.ministry-schedule-note p { margin:1rem 0; }
+.volunteer-cta { margin:2rem 0; text-align:center; }
+.volunteer-cta h2 { color:white; }
+.volunteer-cta p { margin:1rem auto; max-width:640px; }
+@media(max-width:600px){.ministry-jump-links a{flex:1 1 140px;justify-content:center;} .age-groups{padding:3rem 0;} }
