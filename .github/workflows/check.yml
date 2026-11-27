@@ -18,3 +18,5 @@ jobs:
       - run: node scripts/build-admin-preview.mjs
 
       - run: node --test tests/integration/access.test.mjs
+
+      - run: node --test tests/integration/identity-store.test.mjs
