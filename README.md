@@ -1,19 +1,14 @@
 # Gracehill Assembly
 
-Private development repository for the church website and administration prototype.
+Public source repository for the church website and administration demonstration.
 
-## Current state
-The active website is in `gracehillassembly/`: seven HTML pages, shared CSS and JavaScript. Open `gracehillassembly/index.html` for a basic local preview. External fonts and libraries require internet access. There is no build step or backend.
+## Staged application structure
+- apps/website: six public pages
+- apps/administration: demonstration only, no credentials or real records
+- packages/ui/css and packages/shared/js: shared frontend code
+- apps/api and database: future scope, not implemented
+- scripts/build-pages.mjs: assemble public-only dist artifact
 
-Run checks with Node.js 24: `node scripts/check.mjs`.
+Run Node.js 24: `node scripts/check.mjs` and `node scripts/build-pages.mjs`. Serve dist with a local static server. See docs/operations/PAGES.md to switch GitHub Pages to Actions.
 
-## Source layout
-- `gracehillassembly/*.html`, `css/`, `js/`: active source.
-- `gracehillassembly/gha/`, `later use/`, `ga/gha.zip`: preserved historical alternatives, not deployment sources.
-- PNG and PSD files: original branding and design assets.
-- `docs/DEVELOPMENT.md`: workflow, architecture, acceptance criteria and known gaps.
-
-## Release status
-Not production ready. Admin authentication is simulated; forms do not deliver messages; some images and destinations are missing; event and church content needs verification. Do not store real credentials, member records, prayer requests or finances in this prototype. Browser visual verification is outstanding. Passing CI is not approval to deploy.
-
-No public deployment or open-source licence has been enabled. See CONTRIBUTING.md and SECURITY.md.
+Legacy gracehillassembly and root index remain during cutover; source duplication is temporary. Original design assets and archives have not yet been moved. Do not commit sensitive church information: this repository is public. Content, missing photography, browser tests and secure backend remain outstanding.

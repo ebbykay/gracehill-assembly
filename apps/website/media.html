@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Watch live streams, listen to sermons, and browse photos from Gracehill Assembly.">
+    <title>Media | Gracehill Assembly</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    
+    <!-- LightGallery for gallery -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/css/lightgallery-bundle.min.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Media Page Specific Styles -->
+    <style>
+        .media-hero {
+            background: linear-gradient(135deg, rgba(26, 54, 93, 0.9) 0%, rgba(45, 55, 72, 0.85) 100%),
+                        url('../images/hero/media-hero.jpg') center/cover no-repeat;
+            min-height: 60vh;
+        }
+        
+        .media-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .media-tab {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+        
+        .media-tab:hover,
+        .media-tab.active {
+            background: var(--secondary);
+            color: var(--primary);
+            border-color: var(--secondary);
+        }
+        
+        .media-content {
+            display: none;
+        }
+        
+        .media-content.active {
+            display: block;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .video-card {
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .video-thumbnail {
+            position: relative;
+            height: 200px;
+            background: var(--gradient-primary);
+        }
+        
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+        
+        .video-card:hover .play-button {
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+        
+        .video-info {
+            padding: 1.5rem;
+        }
+        
+        .video-info h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .video-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .sermon-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .sermon-item {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+        
+        .sermon-item:hover {
+            transform: translateX(10px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .sermon-info h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .sermon-meta {
+            display: flex;
+            gap: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .sermon-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .sermon-btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background: var(--background);
+            color: var(--text-secondary);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .sermon-btn:hover {
+            background: var(--secondary);
+            color: var(--primary);
+        }
+        
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .gallery-item {
+            position: relative;
+            height: 250px;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            color: white;
+            padding: 1rem;
+            transform: translateY(100%);
+            transition: var(--transition);
+        }
+        
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+        
+        .podcast-section {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem;
+            border-radius: 12px;
+            margin: 4rem 0;
+        }
+        
+        .podcast-section h3 {
+            color: white;
+        }
+        
+        .podcast-section p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+        
+        .live-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: #e74c3c;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.7;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .sermon-item {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+            
+            .sermon-actions {
+                justify-content: center;
+            }
+            
+            .podcast-section {
+                padding: 2rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="css/refinement.css">
+</head>
+<body>
+    <!-- Header (same as index.html) -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <div class="logo-img">GHA</div>
+                <div class="logo-text">GRACEHILL ASSEMBLY</div>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="ministries.html">Ministries</a>
+                <a href="events.html">Events</a>
+                <a href="media.html" class="active">Media</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Theme Banner -->
+    <div class="theme-banner">
+        <div class="container">
+            <i class="fas fa-cross"></i> 2025 OUR YEAR OF SERVING THE LORD <i class="fas fa-cross"></i>
+        </div>
+    </div>
+
+    <!-- Media Hero -->
+    <section class="hero media-hero">
+        <div class="hero-content">
+            <h1>Media & Resources</h1>
+            <p>Watch, listen, and stay connected with our latest messages and content.</p>
+        </div>
+    </section>
+
+    <!-- Live Stream Section -->
+    <section class="section">
+        <div class="container">
+            <div class="podcast-section" data-animate>
+                <h3><span class="live-indicator"></span> Live Now: Sunday Service</h3>
+                <p>Join us live as we worship and receive the Word. Can't join in person? Tune in online and be part of the service.</p>
+                <a href="#" class="btn btn-large">
+                    <i class="fas fa-play"></i> Watch Live
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Media Tabs -->
+    <div class="container">
+        <div class="media-tabs">
+            <button class="media-tab active" data-tab="videos">Videos</button>
+            <button class="media-tab" data-tab="sermons">Sermons</button>
+            <button class="media-tab" data-tab="gallery">Gallery</button>
+            <button class="media-tab" data-tab="podcast">Podcast</button>
+        </div>
+    </div>
+
+    <!-- Videos Tab -->
+    <div class="media-content active" id="videos">
+        <div class="container">
+            <div class="video-grid">
+                <div class="video-card" data-animate>
+                    <div class="video-thumbnail">
+                        <div class="play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h4>The Power of Prayer</h4>
+                        <div class="video-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Oct 27, 2024</span>
+                            <span><i class="fas fa-eye"></i> 1.2K views</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card" data-animate>
+                    <div class="video-thumbnail">
+                        <div class="play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h4>Raising Kingdom Giants</h4>
+                        <div class="video-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Oct 20, 2024</span>
+                            <span><i class="fas fa-eye"></i> 2.5K views</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card" data-animate>
+                    <div class="video-thumbnail">
+                        <div class="play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h4>Walking in Faith</h4>
+                        <div class="video-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Oct 13, 2024</span>
+                            <span><i class="fas fa-eye"></i> 1.8K views</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="video-card" data-animate>
+                    <div class="video-thumbnail">
+                        <div class="play-button">
+                            <i class="fas fa-play"></i>
+                        </div>
+                    </div>
+                    <div class="video-info">
+                        <h4>The Year of Serving</h4>
+                        <div class="video-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Oct 6, 2024</span>
+                            <span><i class="fas fa-eye"></i> 3.1K views</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="#" class="btn">View All Videos</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sermons Tab -->
+    <div class="media-content" id="sermons">
+        <div class="container">
+            <div class="sermon-list">
+                <div class="sermon-item" data-animate>
+                    <div class="sermon-info">
+                        <h4>The God of Favor</h4>
+                        <div class="sermon-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Oct 27, 2024</span>
+                            <span><i class="fas fa-clock"></i> 45 min</span>
+                        </div>
+                    </div>
+                    <div class="sermon-actions">
+                        <button class="sermon-btn"><i class="fas fa-play"></i> Play</button>
+                        <button class="sermon-btn"><i class="fas fa-download"></i> Download</button>
+                        <button class="sermon-btn"><i class="fas fa-share"></i> Share</button>
+                    </div>
+                </div>
+                
+                <div class="sermon-item" data-animate>
+                    <div class="sermon-info">
+                        <h4>Victory in Christ</h4>
+                        <div class="sermon-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Oct 20, 2024</span>
+                            <span><i class="fas fa-clock"></i> 52 min</span>
+                        </div>
+                    </div>
+                    <div class="sermon-actions">
+                        <button class="sermon-btn"><i class="fas fa-play"></i> Play</button>
+                        <button class="sermon-btn"><i class="fas fa-download"></i> Download</button>
+                        <button class="sermon-btn"><i class="fas fa-share"></i> Share</button>
+                    </div>
+                </div>
+                
+                <div class="sermon-item" data-animate>
+                    <div class="sermon-info">
+                        <h4>Building on the Rock</h4>
+                        <div class="sermon-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Oct 13, 2024</span>
+                            <span><i class="fas fa-clock"></i> 48 min</span>
+                        </div>
+                    </div>
+                    <div class="sermon-actions">
+                        <button class="sermon-btn"><i class="fas fa-play"></i> Play</button>
+                        <button class="sermon-btn"><i class="fas fa-download"></i> Download</button>
+                        <button class="sermon-btn"><i class="fas fa-share"></i> Share</button>
+                    </div>
+                </div>
+                
+                <div class="sermon-item" data-animate>
+                    <div class="sermon-info">
+                        <h4>The Power of Unity</h4>
+                        <div class="sermon-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Oct 6, 2024</span>
+                            <span><i class="fas fa-clock"></i> 55 min</span>
+                        </div>
+                    </div>
+                    <div class="sermon-actions">
+                        <button class="sermon-btn"><i class="fas fa-play"></i> Play</button>
+                        <button class="sermon-btn"><i class="fas fa-download"></i> Download</button>
+                        <button class="sermon-btn"><i class="fas fa-share"></i> Share</button>
+                    </div>
+                </div>
+                
+                <div class="sermon-item" data-animate>
+                    <div class="sermon-info">
+                        <h4>Serving the Lord</h4>
+                        <div class="sermon-meta">
+                            <span><i class="fas fa-user"></i> Pastor John</span>
+                            <span><i class="fas fa-calendar"></i> Sep 29, 2024</span>
+                            <span><i class="fas fa-clock"></i> 50 min</span>
+                        </div>
+                    </div>
+                    <div class="sermon-actions">
+                        <button class="sermon-btn"><i class="fas fa-play"></i> Play</button>
+                        <button class="sermon-btn"><i class="fas fa-download"></i> Download</button>
+                        <button class="sermon-btn"><i class="fas fa-share"></i> Share</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center">
+                <a href="#" class="btn">View All Sermons</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Tab -->
+    <div class="media-content" id="gallery">
+        <div class="container">
+            <div class="gallery-grid" id="lightgallery">
+                <a href="images/gallery/service1.jpg" class="gallery-item" data-animate>
+                    <img src="images/gallery/service1.jpg" alt="Sunday Service">
+                    <div class="gallery-overlay">
+                        <p>Sunday Worship Service</p>
+                    </div>
+                </a>
+                <a href="images/gallery/service2.jpg" class="gallery-item" data-animate>
+                    <img src="images/gallery/service2.jpg" alt="Youth Event">
+                    <div class="gallery-overlay">
+                        <p>Youth Explosion 2024</p>
+                    </div>
+                </a>
+                <a href="images/gallery/service3.jpg" class="gallery-item" data-animate>
+                    <img src="images/gallery/service3.jpg" alt="Prayer Meeting">
+                    <div class="gallery-overlay">
+                        <p>All-Night Prayer</p>
+                    </div>
+                </a>
+                <a href="images/gallery/service4.jpg" class="gallery-item" data-animate>
+                    <img src="images/gallery/service4.jpg" alt="Baptism">
+                    <div class="gallery-overlay">
+                        <p>Baptism Service</p>
+                    </div>
+                </a>
+                <a href="images/gallery/service5.jpg" class="gallery-item" data-animate>
+                    <img src="images/gallery/service5.jpg" alt="Outreach">
+                    <div class="gallery-overlay">
+                        <p>Community Outreach</p>
+                    </div>
+                </a>
+                <a href="images/gallery/service6.jpg" class="gallery-item" data-animate>
+                    <img src="images/gallery/service6.jpg" alt="Children">
+                    <div class="gallery-overlay">
+                        <p>Children's Ministry</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Podcast Tab -->
+    <div class="media-content" id="podcast">
+        <div class="container">
+            <div class="podcast-section" data-animate>
+                <h3>Gracehill Assembly Podcast</h3>
+                <p>Listen to our latest messages on your favorite podcast platform. Subscribe to never miss an episode.</p>
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="#" class="btn"><i class="fab fa-spotify"></i> Spotify</a>
+                    <a href="#" class="btn"><i class="fab fa-apple"></i> Apple Podcasts</a>
+                    <a href="#" class="btn"><i class="fab fa-google"></i> Google Podcasts</a>
+                </div>
+            </div>
+            
+            <div class="sermon-list">
+                <div class="sermon-item" data-animate>
+                    <div class="sermon-info">
+                        <h4>Episode 45: The God of Favor</h4>
+                        <div class="sermon-meta">
+                            <span><i class="fas fa-calendar"></i> Oct 27, 2024</span>
+                            <span><i class="fas fa-clock"></i> 45 min</span>
+                        </div>
+                    </div>
+                    <div class="sermon-actions">
+                        <button class="sermon-btn"><i class="fas fa-play"></i> Play</button>
+                        <button class="sermon-btn"><i class="fas fa-download"></i> Download</button>
+                    </div>
+                </div>
+                
+                <div class="sermon-item" data-animate>
+                    <div class="sermon-info">
+                        <h4>Episode 44: Victory in Christ</h4>
+                        <div class="sermon-meta">
+                            <span><i class="fas fa-calendar"></i> Oct 20, 2024</span>
+                            <span><i class="fas fa-clock"></i> 52 min</span>
+                        </div>
+                    </div>
+                    <div class="sermon-actions">
+                        <button class="sermon-btn"><i class="fas fa-play"></i> Play</button>
+                        <button class="sermon-btn"><i class="fas fa-download"></i> Download</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer (same as index.html) -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Gracehill Assembly</h3>
+                    <p>Raising Kingdom Giants through the Word, prayer, and fellowship. A place to grow, serve, and make impact.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="ministries.html">Ministries</a></li>
+                        <li><a href="events.html">Events</a></li>
+                        <li><a href="media.html">Media</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:info@gracehillassembly.org"><i class="fas fa-envelope"></i> info@gracehillassembly.org</a></li>
+                        <li><a href="tel:+233207362469"><i class="fas fa-phone"></i> +233 20 736 2469</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Broadcasting Junction, Weija – Accra, Ghana</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="social-links">
+                <a href="https://www.facebook.com/ram111111111/" target="_blank" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/gracehill_assembly/" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.tiktok.com/@gracehill_assembly/" target="_blank" aria-label="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="https://www.youtube.com/gracehill_assembly/" target="_blank" aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Gracehill Assembly. All Rights Reserved. | 2025: Our Year of Serving the Lord</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/lightgallery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@2.7.1/plugins/zoom/lg-zoom.min.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+        
+        // Initialize LightGallery
+        lightGallery(document.getElementById('lightgallery'), {
+            plugins: [lgZoom],
+            speed: 500,
+            download: false
+        });
+        
+        // Media Tabs
+        const mediaTabs = document.querySelectorAll('.media-tab');
+        const mediaContents = document.querySelectorAll('.media-content');
+        
+        mediaTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                mediaTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                const target = tab.dataset.tab;
+                mediaContents.forEach(content => {
+                    content.classList.remove('active');
+                    if (content.id === target) {
+                        content.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
