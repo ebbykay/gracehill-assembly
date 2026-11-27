@@ -1,0 +1,36 @@
+gracehill-assembly/
+│
+├── index.html
+├── about.html
+├── ministries.html
+├── events.html
+├── media.html
+├── contact.html
+├── admin.html
+│
+├── css/
+│   └── style.css
+│
+├── js/
+│   ├── theme.js
+│   └── main.js
+│
+├── images/
+│   ├── logo/
+│   │   └── gha_logo.jpg
+│   ├── hero/
+│   │   ├── church-hero.jpg
+│   │   ├── about-hero.jpg
+│   │   ├── ministries-hero.jpg
+│   │   ├── events-hero.jpg
+│   │   ├── media-hero.jpg
+│   │   └── contact-hero.jpg
+│   └── gallery/
+│       ├── service1.jpg
+│       ├── service2.jpg
+│       ├── service3.jpg
+│       ├── service4.jpg
+│       ├── service5.jpg
+│       └── service6.jpg
+│
+└── README.md
