@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gracehill Assembly Church Administration Portal">
+    <title>Admin Portal | Gracehill Assembly</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Admin Specific Styles -->
+    <style>
+        :root {
+            --sidebar-width: 280px;
+        }
+        
+        .admin-wrapper {
+            display: flex;
+            min-height: calc(100vh - 120px);
+        }
+        
+        /* Sidebar */
+        .admin-sidebar {
+            width: var(--sidebar-width);
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            position: fixed;
+            top: 120px;
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            transition: var(--transition);
+            z-index: 900;
+        }
+        
+        .admin-sidebar-header {
+            padding: 2rem 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .admin-user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .admin-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--gradient-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: bold;
+        }
+        
+        .admin-user-details h4 {
+            margin-bottom: 0.2rem;
+            font-size: 1rem;
+        }
+        
+        .admin-user-details p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0;
+        }
+        
+        .admin-nav {
+            padding: 1.5rem 0;
+        }
+        
+        .admin-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.8rem 1.5rem;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            cursor: pointer;
+            border-left: 3px solid transparent;
+        }
+        
+        .admin-nav-item:hover {
+            background: var(--background);
+            color: var(--primary);
+        }
+        
+        .admin-nav-item.active {
+            background: var(--background);
+            color: var(--secondary);
+            border-left-color: var(--secondary);
+            font-weight: 600;
+        }
+        
+        .admin-nav-item i {
+            width: 20px;
+        }
+        
+        /* Main Content */
+        .admin-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            transition: var(--transition);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .admin-header h2 {
+            margin-bottom: 0;
+        }
+        
+        .admin-header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        /* Dashboard Cards */
+        .dashboard-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary);
+            font-size: 1.5rem;
+        }
+        
+        .stat-info h3 {
+            font-size: 2rem;
+            margin-bottom: 0.2rem;
+            color: var(--primary);
+        }
+        
+        .stat-info p {
+            color: var(--text-muted);
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        /* Quick Actions */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        
+        .action-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .action-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--secondary);
+        }
+        
+        .action-btn i {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .action-btn span {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        /* Tables */
+        .admin-table-container {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            overflow-x: auto;
+        }
+        
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .admin-table th {
+            text-align: left;
+            padding: 1rem;
+            background: var(--background);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+        
+        .admin-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .admin-table tr:hover {
+            background: var(--background);
+        }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        .status-active {
+            background: #e6f7e6;
+            color: #2e7d32;
+        }
+        
+        .status-pending {
+            background: #fff3e0;
+            color: #ef6c00;
+        }
+        
+        .status-inactive {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        /* Forms */
+        .admin-form {
+            background: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 800px;
+        }
+        
+        .admin-form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .admin-form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .admin-form-group input,
+        .admin-form-group select,
+        .admin-form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--background);
+            color: var(--text-primary);
+        }
+        
+        /* Department Pages */
+        .department-page {
+            display: none;
+        }
+        
+        .department-page.active {
+            display: block;
+        }
+        
+        /* Login Section */
+        .login-section {
+            max-width: 400px;
+            margin: 4rem auto;
+            padding: 2.5rem;
+            background: var(--surface);
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+        }
+        
+        .login-section h2 {
+            margin-bottom: 2rem;
+        }
+        
+        .login-form .form-group {
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        /* Charts */
+        .chart-container {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            height: 300px;
+        }
+        
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+            }
+            
+            .admin-sidebar.active {
+                transform: translateX(0);
+            }
+            
+            .admin-content {
+                margin-left: 0;
+            }
+            
+            .admin-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .dashboard-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (simplified for admin) -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <div class="logo-img">GHA</div>
+                <div class="logo-text">GRACEHILL ASSEMBLY</div>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="ministries.html">Ministries</a>
+                <a href="events.html">Events</a>
+                <a href="media.html">Media</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Theme Banner -->
+    <div class="theme-banner">
+        <div class="container">
+            <i class="fas fa-cross"></i> 2025 OUR YEAR OF SERVING THE LORD <i class="fas fa-cross"></i>
+        </div>
+    </div>
+
+    <!-- Login Section -->
+    <section class="login-section" id="loginSection">
+        <h2>Church Admin Portal</h2>
+        <p style="margin-bottom: 2rem; color: var(--text-muted);">Secure access for church staff and leadership</p>
+        
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="form-group">
+                <label for="role">Access Level</label>
+                <select id="role" required>
+                    <option value="">Select Role</option>
+                    <option value="pastor">Senior Pastor</option>
+                    <option value="admin">Church Administrator</option>
+                    <option value="finance">Finance Team</option>
+                    <option value="membership">Membership Director</option>
+                    <option value="ministry">Ministry Leader</option>
+                    <option value="events">Events Coordinator</option>
+                </select>
+            </div>
+            <button type="submit" class="btn">Login to Dashboard</button>
+        </form>
+    </section>
+
+    <!-- Admin Dashboard (Hidden until login) -->
+    <div class="admin-wrapper" id="adminDashboard" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="admin-sidebar">
+            <div class="admin-sidebar-header">
+                <div class="admin-user-info">
+                    <div class="admin-avatar">JD</div>
+                    <div class="admin-user-details">
+                        <h4 id="adminUserName">John Doe</h4>
+                        <p id="adminUserRole">Senior Pastor</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="admin-nav">
+                <div class="admin-nav-item active" onclick="showDepartment('dashboard')">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </div>
+                <div class="admin-nav-item" onclick="showDepartment('membership')">
+                    <i class="fas fa-users"></i>
+                    <span>Membership</span>
+                </div>
+                <div class="admin-nav-item" onclick="showDepartment('finance')">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Finance</span>
+                </div>
+                <div class="admin-nav-item" onclick="showDepartment('events')">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events</span>
+                </div>
+                <div class="admin-nav-item" onclick="showDepartment('ministry')">
+                    <i class="fas fa-hands-helping"></i>
+                    <span>Ministries</span>
+                </div>
+                <div class="admin-nav-item" onclick="showDepartment('reports')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Reports</span>
+                </div>
+                <div class="admin-nav-item" onclick="showDepartment('settings')">
+                    <i class="fas fa-cog"></i>
+                    <span>Settings</span>
+                </div>
+                <div class="admin-nav-item" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="admin-content">
+            <!-- Dashboard Header -->
+            <div class="admin-header">
+                <h2>Dashboard</h2>
+                <div class="admin-header-actions">
+                    <button class="btn btn-small" onclick="refreshData()">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button class="btn btn-small btn-outline" onclick="toggleSidebar()">
+                        <i class="fas fa-bars"></i> Menu
+                    </button>
+                </div>
+            </div>
+
+            <!-- Dashboard Department -->
+            <div class="department-page active" id="dashboardDept">
+                <!-- Stats Cards -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>347</h3>
+                            <p>Total Members</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-user-plus"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>28</h3>
+                            <p>New This Month</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>₵12,450</h3>
+                            <p>October Tithes</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>15</h3>
+                            <p>Upcoming Events</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
+                <div class="quick-actions">
+                    <div class="action-btn" onclick="showDepartment('membership')">
+                        <i class="fas fa-user-plus"></i>
+                        <span>Add Member</span>
+                    </div>
+                    <div class="action-btn" onclick="showDepartment('finance')">
+                        <i class="fas fa-plus-circle"></i>
+                        <span>Record Income</span>
+                    </div>
+                    <div class="action-btn" onclick="showDepartment('events')">
+                        <i class="fas fa-calendar-plus"></i>
+                        <span>Create Event</span>
+                    </div>
+                    <div class="action-btn" onclick="showDepartment('ministry')">
+                        <i class="fas fa-user-friends"></i>
+                        <span>Schedule Volunteer</span>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="admin-table-container">
+                    <h3 style="margin-bottom: 1.5rem;">Recent Activity</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Activity</th>
+                                <th>User</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>New member added: Kwame Asare</td>
+                                <td>Pastor John</td>
+                                <td>2 hours ago</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Event created: Youth Conference</td>
+                                <td>Brother David</td>
+                                <td>5 hours ago</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Finance report generated</td>
+                                <td>Sister Grace</td>
+                                <td>Yesterday</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Volunteer schedule updated</td>
+                                <td>Brother Michael</td>
+                                <td>Yesterday</td>
+                                <td><span class="status-badge status-pending">Pending</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Attendance Chart -->
+                <div class="chart-container">
+                    <canvas id="attendanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Membership Department -->
+            <div class="department-page" id="membershipDept">
+                <div class="admin-header">
+                    <h2>Membership Management</h2>
+                    <button class="btn btn-small" onclick="showAddMemberForm()">
+                        <i class="fas fa-plus"></i> Add Member
+                    </button>
+                </div>
+
+                <!-- Member Search -->
+                <div style="margin-bottom: 2rem;">
+                    <input type="text" placeholder="Search members..." style="max-width: 300px;" id="memberSearch">
+                </div>
+
+                <!-- Members Table -->
+                <div class="admin-table-container">
+                    <table class="admin-table" id="membersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Contact</th>
+                                <th>Location</th>
+                                <th>Hometown</th>
+                                <th>DOB</th>
+                                <th>Department</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Kwame Asare</td>
+                                <td>+233 24 123 4567</td>
+                                <td>Weija, Accra</td>
+                                <td>Kumasi</td>
+                                <td>15/03/1985</td>
+                                <td>Worship, Men</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn-small" onclick="viewMember(1)"><i class="fas fa-eye"></i></button>
+                                    <button class="btn-small" onclick="editMember(1)"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Abena Mensah</td>
+                                <td>+233 20 765 4321</td>
+                                <td>Dansoman, Accra</td>
+                                <td>Cape Coast</td>
+                                <td>22/08/1990</td>
+                                <td>Children, Women</td>
+                                <td><span class="status-badge status-active">Active</span></td>
+                                <td>
+                                    <button class="btn-small" onclick="viewMember(2)"><i class="fas fa-eye"></i></button>
+                                    <button class="btn-small" onclick="editMember(2)"><i class="fas fa-edit"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Finance Department -->
+            <div class="department-page" id="financeDept">
+                <div class="admin-header">
+                    <h2>Financial Management</h2>
+                    <button class="btn btn-small" onclick="recordTransaction()">
+                        <i class="fas fa-plus"></i> Record Transaction
+                    </button>
+                </div>
+
+                <!-- Finance Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>₵12,450</h3>
+                            <p>October Tithes</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-hand-holding-heart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>₵3,280</h3>
+                            <p>Offerings</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-file-invoice"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>₵2,150</h3>
+                            <p>Special Donations</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>₵17,880</h3>
+                            <p>Total Income</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Income Table -->
+                <div class="admin-table-container">
+                    <h3 style="margin-bottom: 1.5rem;">Recent Income</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Member</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Method</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>29/10/2024</td>
+                                <td>Kwame Asare</td>
+                                <td>Tithe</td>
+                                <td>₵250.00</td>
+                                <td>Mobile Money</td>
+                                <td><span class="status-badge status-active">Completed</span></td>
+                                <td>
+                                    <button class="btn-small"><i class="fas fa-receipt"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Expenses Table -->
+                <div class="admin-table-container">
+                    <h3 style="margin-bottom: 1.5rem;">Recent Expenses</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Vendor</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>28/10/2024</td>
+                                <td>Electricity Bill</td>
+                                <td>Utilities</td>
+                                <td>₵850.00</td>
+                                <td>ECG</td>
+                                <td><span class="status-badge status-active">Paid</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Events Department -->
+            <div class="department-page" id="eventsDept">
+                <div class="admin-header">
+                    <h2>Events Management</h2>
+                    <button class="btn btn-small" onclick="createEvent()">
+                        <i class="fas fa-plus"></i> Create Event
+                    </button>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="admin-table-container">
+                    <h3 style="margin-bottom: 1.5rem;">Upcoming Events</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Event</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Location</th>
+                                <th>Coordinator</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Youth Conference</td>
+                                <td>15-17 Nov</td>
+                                <td>6:00 PM</td>
+                                <td>Main Auditorium</td>
+                                <td>Brother David</td>
+                                <td><span class="status-badge status-active">Confirmed</span></td>
+                                <td>
+                                    <button class="btn-small"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-small"><i class="fas fa-users"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Event Calendar -->
+                <div class="admin-table-container">
+                    <h3 style="margin-bottom: 1.5rem;">Calendar</h3>
+                    <div id="eventCalendar" style="height: 400px; background: var(--background); border-radius: 8px; padding: 1rem;">
+                        <!-- Calendar will be initialized here -->
+                        <div style="text-align: center; padding: 2rem;">Calendar view would appear here</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ministry Department -->
+            <div class="department-page" id="ministryDept">
+                <div class="admin-header">
+                    <h2>Ministry Management</h2>
+                    <button class="btn btn-small" onclick="addVolunteer()">
+                        <i class="fas fa-plus"></i> Add Volunteer
+                    </button>
+                </div>
+
+                <!-- Ministry Stats -->
+                <div class="dashboard-stats">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>87</h3>
+                            <p>Active Volunteers</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>245h</h3>
+                            <p>Service Hours</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>12</h3>
+                            <p>New Volunteers</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>8</h3>
+                            <p>Teams</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Volunteer Schedule -->
+                <div class="admin-table-container">
+                    <h3 style="margin-bottom: 1.5rem;">This Week's Schedule</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Ministry</th>
+                                <th>Volunteer</th>
+                                <th>Role</th>
+                                <th>Service</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Worship</td>
+                                <td>Kwame Asare</td>
+                                <td>Lead Guitar</td>
+                                <td>Sunday Service</td>
+                                <td>8:30 AM</td>
+                                <td><span class="status-badge status-active">Confirmed</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Reports Department -->
+            <div class="department-page" id="reportsDept">
+                <div class="admin-header">
+                    <h2>Reports & Analytics</h2>
+                </div>
+
+                <div class="quick-actions">
+                    <div class="action-btn" onclick="generateReport('membership')">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Membership Report</span>
+                    </div>
+                    <div class="action-btn" onclick="generateReport('finance')">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Financial Report</span>
+                    </div>
+                    <div class="action-btn" onclick="generateReport('attendance')">
+                        <i class="fas fa-calendar-check"></i>
+                        <span>Attendance Report</span>
+                    </div>
+                    <div class="action-btn" onclick="generateReport('ministry')">
+                        <i class="fas fa-hands-helping"></i>
+                        <span>Ministry Report</span>
+                    </div>
+                </div>
+
+                <!-- Report Preview -->
+                <div class="admin-table-container">
+                    <h3 style="margin-bottom: 1.5rem;">Recent Reports</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Report Name</th>
+                                <th>Generated</th>
+                                <th>Period</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Monthly Membership Growth</td>
+                                <td>01/11/2024</td>
+                                <td>October 2024</td>
+                                <td>
+                                    <button class="btn-small"><i class="fas fa-download"></i></button>
+                                    <button class="btn-small"><i class="fas fa-eye"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Settings Department -->
+            <div class="department-page" id="settingsDept">
+                <div class="admin-header">
+                    <h2>Settings</h2>
+                </div>
+
+                <div class="admin-form">
+                    <h3 style="margin-bottom: 1.5rem;">Church Information</h3>
+                    
+                    <div class="admin-form-group">
+                        <label for="churchName">Church Name</label>
+                        <input type="text" id="churchName" value="Gracehill Assembly">
+                    </div>
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label for="churchEmail">Email</label>
+                            <input type="email" id="churchEmail" value="info@gracehillassembly.org">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="churchPhone">Phone</label>
+                            <input type="tel" id="churchPhone" value="+233 20 736 2469">
+                        </div>
+                    </div>
+                    
+                    <div class="admin-form-group">
+                        <label for="churchAddress">Address</label>
+                        <textarea id="churchAddress" rows="3">Broadcasting Junction, Opposite A.F. Electricals, Weija – Accra, Ghana</textarea>
+                    </div>
+                    
+                    <h3 style="margin: 2rem 0 1.5rem;">Theme Settings</h3>
+                    
+                    <div class="admin-form-row">
+                        <div class="admin-form-group">
+                            <label for="primaryColor">Primary Color</label>
+                            <input type="color" id="primaryColor" value="#1a365d">
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="secondaryColor">Secondary Color</label>
+                            <input type="color" id="secondaryColor" value="#d4af37">
+                        </div>
+                    </div>
+                    
+                    <button class="btn" onclick="saveSettings()">Save Settings</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Footer (same as index.html) -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Gracehill Assembly</h3>
+                    <p>Raising Kingdom Giants through the Word, prayer, and fellowship. A place to grow, serve, and make impact.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="ministries.html">Ministries</a></li>
+                        <li><a href="events.html">Events</a></li>
+                        <li><a href="media.html">Media</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:info@gracehillassembly.org"><i class="fas fa-envelope"></i> info@gracehillassembly.org</a></li>
+                        <li><a href="tel:+233207362469"><i class="fas fa-phone"></i> +233 20 736 2469</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Broadcasting Junction, Weija – Accra, Ghana</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="social-links">
+                <a href="https://www.facebook.com/ram111111111/" target="_blank" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/gracehill_assembly/" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.tiktok.com/@gracehill_assembly/" target="_blank" aria-label="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="https://www.youtube.com/gracehill_assembly/" target="_blank" aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Gracehill Assembly. All Rights Reserved. | 2025: Our Year of Serving the Lord</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="js/theme.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Admin Portal Scripts
+        let currentUser = null;
+        
+        // Login Form Handler
+        document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const role = document.getElementById('role').value;
+            
+            if (username && password && role) {
+                currentUser = { username, role };
+                
+                // Hide login, show dashboard
+                document.getElementById('loginSection').style.display = 'none';
+                document.getElementById('adminDashboard').style.display = 'flex';
+                
+                // Update user info
+                document.getElementById('adminUserName').textContent = username;
+                document.getElementById('adminUserRole').textContent = 
+                    role.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+                
+                // Initialize chart
+                initAttendanceChart();
+            }
+        });
+        
+        // Logout Function
+        function logout() {
+            currentUser = null;
+            document.getElementById('loginSection').style.display = 'block';
+            document.getElementById('adminDashboard').style.display = 'none';
+            document.getElementById('loginForm').reset();
+        }
+        
+        // Show Department
+        function showDepartment(department) {
+            // Update active nav item
+            document.querySelectorAll('.admin-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+            
+            // Show corresponding department page
+            document.querySelectorAll('.department-page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(department + 'Dept').classList.add('active');
+            
+            // Update header title
+            const titles = {
+                dashboard: 'Dashboard',
+                membership: 'Membership Management',
+                finance: 'Financial Management',
+                events: 'Events Management',
+                ministry: 'Ministry Management',
+                reports: 'Reports & Analytics',
+                settings: 'Settings'
+            };
+            document.querySelector('.admin-header h2').textContent = titles[department];
+            
+            // Close sidebar on mobile
+            if (window.innerWidth <= 768) {
+                document.querySelector('.admin-sidebar').classList.remove('active');
+            }
+        }
+        
+        // Toggle Sidebar on Mobile
+        function toggleSidebar() {
+            document.querySelector('.admin-sidebar').classList.toggle('active');
+        }
+        
+        // Initialize Attendance Chart
+        function initAttendanceChart() {
+            const ctx = document.getElementById('attendanceChart')?.getContext('2d');
+            if (ctx) {
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+                        datasets: [{
+                            label: 'Attendance',
+                            data: [180, 210, 195, 225, 240],
+                            borderColor: '#d4af37',
+                            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+        }
+        
+        // Member Search
+        document.getElementById('memberSearch')?.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#membersTable tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+        
+        // Placeholder Functions
+        function showAddMemberForm() {
+            alert('Add member form would open here');
+        }
+        
+        function viewMember(id) {
+            alert('Viewing member ' + id);
+        }
+        
+        function editMember(id) {
+            alert('Editing member ' + id);
+        }
+        
+        function recordTransaction() {
+            alert('Record transaction form would open');
+        }
+        
+        function createEvent() {
+            alert('Create event form would open');
+        }
+        
+        function addVolunteer() {
+            alert('Add volunteer form would open');
+        }
+        
+        function generateReport(type) {
+            alert('Generating ' + type + ' report...');
+        }
+        
+        function saveSettings() {
+            alert('Settings saved successfully!');
+        }
+        
+        function refreshData() {
+            alert('Refreshing data...');
+        }
+        
+        // Check for existing login on page load
+        if (localStorage.getItem('gracehill-admin')) {
+            // Auto-login would happen here in a real app
+        }
+    </script>
+</body>
+</html>

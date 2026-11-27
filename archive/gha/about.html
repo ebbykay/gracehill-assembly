@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Learn about Gracehill Assembly - our vision, mission, and leadership. Discover our journey in raising Kingdom Giants for Christ.">
+    <title>About Us | Gracehill Assembly</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- About Page Specific Styles -->
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, rgba(13, 46, 110, 0.92) 0%, rgba(10, 22, 60, 0.82) 100%),
+                        url('../images/hero/about-hero.jpg') center/cover no-repeat;
+            min-height: 60vh;
+        }
+        
+        .vision-mission-wrapper {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 4rem;
+            align-items: start;
+            margin: 4rem 0;
+        }
+
+        .about-logo-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: sticky;
+            top: 140px;
+            padding: 2rem;
+            background: var(--gradient-primary);
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+            color: white;
+        }
+
+        .about-logo-badge {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #c9971c, #f0d060, #e8c040);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            font-size: 22px;
+            color: #0d2e6e;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 0 4px rgba(201, 151, 28, 0.3), 0 0 0 8px rgba(255,255,255,0.1);
+            letter-spacing: 1px;
+        }
+
+        .about-logo-panel h3 {
+            color: linear-gradient(135deg, #c9971c, #f0d060);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+            color: #f0d060;
+        }
+
+        .about-logo-panel .tagline {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.85);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .about-logo-panel .cross-divider {
+            color: #f0d060;
+            font-size: 1.2rem;
+            letter-spacing: 8px;
+            margin-bottom: 1rem;
+        }
+
+        .about-logo-panel .year-theme {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #f0d060;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-top: 1px solid rgba(240, 208, 96, 0.3);
+            padding-top: 1rem;
+            width: 100%;
+        }
+        
+        .vision-mission-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+        }
+        
+        .vision-card, .mission-card {
+            background: var(--surface);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow-lg);
+            border-left: 5px solid var(--secondary);
+        }
+        
+        .vision-card h3, .mission-card h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+        
+        .beliefs-section {
+            background: var(--surface);
+            padding: 4rem 0;
+            margin: 4rem 0;
+        }
+        
+        .beliefs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .belief-item {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .belief-item i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 4rem auto;
+            padding: 2rem 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 100%;
+            background: var(--secondary);
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            width: 50%;
+        }
+        
+        .timeline-item:nth-child(odd) {
+            left: 0;
+            padding-right: 3rem;
+        }
+        
+        .timeline-item:nth-child(even) {
+            left: 50%;
+            padding-left: 3rem;
+        }
+        
+        .timeline-content {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: var(--shadow);
+        }
+        
+        .timeline-year {
+            color: var(--secondary);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .vision-mission-wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .about-logo-panel {
+                position: static;
+            }
+
+            .vision-mission-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::before {
+                left: 0;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                left: 0 !important;
+                padding: 0 0 0 2rem !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (same as index.html) -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <div class="logo-img">GHA</div>
+                <div class="logo-text">GRACEHILL ASSEMBLY</div>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="about.html" class="active">About</a>
+                <a href="ministries.html">Ministries</a>
+                <a href="events.html">Events</a>
+                <a href="media.html">Media</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Theme Banner -->
+    <div class="theme-banner">
+        <div class="container">
+            <i class="fas fa-cross"></i> 2025 OUR YEAR OF SERVING THE LORD <i class="fas fa-cross"></i>
+        </div>
+    </div>
+
+    <!-- About Hero -->
+    <section class="hero about-hero">
+        <div class="hero-content">
+            <h1>About Gracehill Assembly</h1>
+            <p>We are a Spirit-filled church on a divine mandate to raise Kingdom Giants and impact lives through the power of Jesus Christ.</p>
+        </div>
+    </section>
+
+    <!-- Welcome & Identity -->
+    <section class="section">
+        <div class="container">
+            <div class="vision-mission-wrapper">
+                <!-- Left: Logo Panel -->
+                <div class="about-logo-panel" data-animate>
+                    <div class="about-logo-badge">GHA</div>
+                    <h3>GRACEHILL ASSEMBLY</h3>
+                    <div class="tagline">Raising Kingdom Giants for Christ through the Word, Prayer &amp; Fellowship</div>
+                    <div class="cross-divider">✝ ✝ ✝</div>
+                    <div class="year-theme">2025 — Our Year of<br>Serving the Lord</div>
+                </div>
+
+                <!-- Right: Welcome text -->
+                <div data-animate>
+                    <h2>Welcome to Gracehill Assembly</h2>
+                    <p>Gracehill Assembly is more than a church—it is a family. We are a community of believers passionate about knowing Jesus and making Him known. Our heartbeat is to see lives transformed through the Word, Worship, and the Power of the Holy Spirit.</p>
+                    <p>Through spirit-filled services, cell fellowships, evangelism and acts of love, we are building a generation of strong believers who influence the world for Christ.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission, Vision & Values -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+                <div class="card" data-animate style="text-align:center;">
+                    <div class="card-icon"><i class="fas fa-cross"></i></div>
+                    <h3>Our Mission</h3>
+                    <p>To win souls, disciple believers, and equip men and women to walk in their God-given purpose, transforming communities through the power of Jesus Christ.</p>
+                </div>
+
+                <div class="card" data-animate style="text-align:center;">
+                    <div class="card-icon"><i class="fas fa-eye"></i></div>
+                    <h3>Our Vision</h3>
+                    <p>To raise Kingdom Giants—believers who will carry God's presence and transform nations through prayer, the Word, excellence, and love.</p>
+                </div>
+
+                <div class="card" data-animate style="text-align:center;">
+                    <div class="card-icon"><i class="fas fa-star"></i></div>
+                    <h3>Our Core Values</h3>
+                    <p>Faith in Jesus | Love for People | Excellence in Service | Discipleship | Kingdom Advancement | Prayer &amp; Worship | Evangelism</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Our Story -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>Our Journey</h2>
+                <p>How God has led us through the years</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item" data-animate>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2015</div>
+                        <h4>The Beginning</h4>
+                        <p>Gracehill Assembly was founded with a small group of believers meeting in a living room, united by a vision to raise Kingdom Giants.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" data-animate>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2017</div>
+                        <h4>First Sanctuary</h4>
+                        <p>We moved into our first rented facility as the congregation grew to over 50 members.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" data-animate>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2020</div>
+                        <h4>Growth & Expansion</h4>
+                        <p>Launched multiple ministries including Children, Youth, and Outreach programs.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" data-animate>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2023</div>
+                        <h4>Our Permanent Home</h4>
+                        <p>Acquired our current facility at Broadcasting Junction, Weija, and established multiple cell groups.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item" data-animate>
+                    <div class="timeline-content">
+                        <div class="timeline-year">2025</div>
+                        <h4>Year of Serving the Lord</h4>
+                        <p>Embracing our theme for the year with renewed commitment to serve God and our community.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leadership Section -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>Our Leadership</h2>
+                <p>Guided by dedicated servants of God</p>
+            </div>
+            
+            <div class="card-grid">
+                <div class="card" data-animate>
+                    <div class="card-icon"><i class="fas fa-user-tie"></i></div>
+                    <h3>Senior Pastor</h3>
+                    <p>Lead Pastor with a heart for discipleship and raising Kingdom leaders. Over 15 years of ministry experience.</p>
+                </div>
+                
+                <div class="card" data-animate>
+                    <div class="card-icon"><i class="fas fa-user-friends"></i></div>
+                    <h3>Assistant Pastor</h3>
+                    <p>Passionate about prayer and pastoral care, helping members grow in their faith journey.</p>
+                </div>
+                
+                <div class="card" data-animate>
+                    <div class="card-icon"><i class="fas fa-user-graduate"></i></div>
+                    <h3>Church Elders</h3>
+                    <p>Wise counselors providing spiritual oversight and guidance for the church family.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Beliefs -->
+    <section class="beliefs-section">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>What We Believe</h2>
+                <p>Our foundational beliefs and core doctrines</p>
+            </div>
+            
+            <div class="beliefs-grid">
+                <div class="belief-item" data-animate>
+                    <i class="fas fa-bible"></i>
+                    <h4>The Bible</h4>
+                    <p>We believe the Bible is the inspired, infallible Word of God and our final authority for faith and practice.</p>
+                </div>
+                
+                <div class="belief-item" data-animate>
+                    <i class="fas fa-cross"></i>
+                    <h4>Salvation</h4>
+                    <p>Salvation is through faith in Jesus Christ alone, by grace, not by works.</p>
+                </div>
+                
+                <div class="belief-item" data-animate>
+                    <i class="fas fa-water"></i>
+                    <h4>Baptism</h4>
+                    <p>We practice water baptism by immersion as an outward declaration of inward faith.</p>
+                </div>
+                
+                <div class="belief-item" data-animate>
+                    <i class="fas fa-dove"></i>
+                    <h4>Holy Spirit</h4>
+                    <p>We believe in the baptism of the Holy Spirit and the operation of spiritual gifts.</p>
+                </div>
+                
+                <div class="belief-item" data-animate>
+                    <i class="fas fa-praying-hands"></i>
+                    <h4>Prayer</h4>
+                    <p>Prayer is essential for relationship with God and for seeing His power manifest.</p>
+                </div>
+                
+                <div class="belief-item" data-animate>
+                    <i class="fas fa-heart"></i>
+                    <h4>Love & Service</h4>
+                    <p>We are called to love God and love others through practical service and outreach.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA - Be Part of This Family -->
+    <section class="section">
+        <div class="container">
+            <div class="cta-banner" data-animate style="background: linear-gradient(135deg, #0d2e6e, #1a4a9c); color:white; padding:4rem 2rem; text-align:center; border-radius:12px; max-width:700px; margin:0 auto;">
+                <h2 style="color:white; margin-bottom:1rem;">Be Part of This Family</h2>
+                <p style="color:rgba(255,255,255,0.9); max-width:500px; margin:0 auto 2rem;">Join us as we lift Jesus high and raise Kingdom Giants. You belong here.</p>
+                <a href="contact.html" class="btn btn-large">Join Gracehill</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links" style="justify-content:center; margin-bottom:1.5rem;">
+                <a href="https://www.instagram.com/gracehill_assembly/" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.facebook.com/ram111111111/" target="_blank" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.tiktok.com/@gracehill_assembly/" target="_blank" aria-label="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="https://www.youtube.com/gracehill_assembly/" target="_blank" aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 Gracehill Assembly | Raising Kingdom Giants</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

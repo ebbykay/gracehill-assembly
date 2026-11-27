@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore the ministries at Gracehill Assembly - Children, Youth, Men, Women, Worship, and more. Find your place to serve.">
+    <title>Ministries | Gracehill Assembly</title>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;600;700&family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- AOS Animation -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css">
+    
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <!-- Ministries Page Specific Styles -->
+    <style>
+        .ministries-hero {
+            background: linear-gradient(135deg, rgba(26, 54, 93, 0.9) 0%, rgba(45, 55, 72, 0.85) 100%),
+                        url('../images/hero/ministries-hero.jpg') center/cover no-repeat;
+            min-height: 60vh;
+        }
+        
+        .ministry-category {
+            margin-bottom: 5rem;
+        }
+        
+        .category-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .category-title h3 {
+            color: var(--secondary);
+            font-size: 2rem;
+        }
+        
+        .ministry-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .ministry-card {
+            background: var(--surface);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        
+        .ministry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        .ministry-image {
+            height: 200px;
+            background: var(--gradient-primary);
+            position: relative;
+        }
+        
+        .ministry-image i {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: var(--secondary);
+            opacity: 0.3;
+        }
+        
+        .ministry-content {
+            padding: 1.5rem;
+        }
+        
+        .ministry-content h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .ministry-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin: 1rem 0;
+        }
+        
+        .ministry-meta i {
+            color: var(--secondary);
+        }
+        
+        .age-groups {
+            background: var(--surface);
+            padding: 4rem 0;
+            margin: 4rem 0;
+        }
+        
+        .age-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .age-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--background);
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary);
+        }
+        
+        .age-card i {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .volunteer-cta {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 4rem;
+            border-radius: 12px;
+            text-align: center;
+            margin: 4rem 0;
+        }
+        
+        .volunteer-cta h3 {
+            color: white;
+            margin-bottom: 1rem;
+        }
+        
+        .volunteer-cta p {
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+        
+        .schedule-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        
+        .schedule-table th {
+            background: var(--secondary);
+            color: var(--primary);
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        .schedule-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .schedule-table tr:hover {
+            background: var(--background);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header (same as index.html) -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo-container">
+                <div class="logo-img">GHA</div>
+                <div class="logo-text">GRACEHILL ASSEMBLY</div>
+            </a>
+            
+            <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </button>
+            
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="about.html">About</a>
+                <a href="ministries.html" class="active">Ministries</a>
+                <a href="events.html">Events</a>
+                <a href="media.html">Media</a>
+                <a href="contact.html">Contact</a>
+            </nav>
+            
+            <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Theme Banner -->
+    <div class="theme-banner">
+        <div class="container">
+            <i class="fas fa-cross"></i> 2025 OUR YEAR OF SERVING THE LORD <i class="fas fa-cross"></i>
+        </div>
+    </div>
+
+    <!-- Ministries Hero -->
+    <section class="hero ministries-hero">
+        <div class="hero-content">
+            <h1>Our Ministries</h1>
+            <p>Discover your place to grow, serve, and make a difference in God's kingdom.</p>
+        </div>
+    </section>
+
+    <!-- Main Ministries -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>Worship & Spiritual Growth</h2>
+                <p>Ministries focused on deepening your relationship with God</p>
+            </div>
+            
+            <div class="ministry-grid">
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Worship & Arts</h4>
+                        <p>Use your creative gifts to glorify God through music, dance, and arts.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Fridays 5:00 PM</span>
+                            <span><i class="fas fa-users"></i> 25 Members</span>
+                        </div>
+                        <a href="#" class="btn btn-small">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-pray"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Prayer Ministry</h4>
+                        <p>Intercede for the church, community, and nations through corporate prayer.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Wednesdays 6:00 PM</span>
+                            <span><i class="fas fa-users"></i> 40 Members</span>
+                        </div>
+                        <a href="#" class="btn btn-small">Learn More</a>
+                    </div>
+                </div>
+                
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-bible"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Bible Study</h4>
+                        <p>Deepen your understanding of God's Word through systematic study.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Tuesdays 6:30 PM</span>
+                            <span><i class="fas fa-users"></i> 35 Members</span>
+                        </div>
+                        <a href="#" class="btn btn-small">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Age-Specific Ministries -->
+    <section class="age-groups">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>Ministries for All Ages</h2>
+                <p>Specialized ministries tailored for every stage of life</p>
+            </div>
+            
+            <div class="age-grid">
+                <div class="age-card" data-animate>
+                    <i class="fas fa-child"></i>
+                    <h4>Children's Ministry</h4>
+                    <p>Ages 3-12</p>
+                    <p>Sunday School & Kids Church</p>
+                </div>
+                
+                <div class="age-card" data-animate>
+                    <i class="fas fa-users"></i>
+                    <h4>Youth Ministry</h4>
+                    <p>Ages 13-25</p>
+                    <p>Fridays 5:00 PM</p>
+                </div>
+                
+                <div class="age-card" data-animate>
+                    <i class="fas fa-user-tie"></i>
+                    <h4>Men's Ministry</h4>
+                    <p>Monthly Meetings</p>
+                    <p>Men's Retreats</p>
+                </div>
+                
+                <div class="age-card" data-animate>
+                    <i class="fas fa-female"></i>
+                    <h4>Women's Ministry</h4>
+                    <p>Monthly Gatherings</p>
+                    <p>Women's Conferences</p>
+                </div>
+                
+                <div class="age-card" data-animate>
+                    <i class="fas fa-hand-holding-heart"></i>
+                    <h4>Young Adults</h4>
+                    <p>Ages 18-35</p>
+                    <p>Saturdays 4:00 PM</p>
+                </div>
+                
+                <div class="age-card" data-animate>
+                    <i class="fas fa-heart"></i>
+                    <h4>Senior Saints</h4>
+                    <p>Ages 60+</p>
+                    <p>Fellowship & Prayer</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Service Teams -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>Service Teams</h2>
+                <p>Practical ministries serving our church family</p>
+            </div>
+            
+            <div class="ministry-grid">
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-hand-peace"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Ushering & Hospitality</h4>
+                        <p>Welcome guests and create a warm atmosphere for worship.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Sundays 7:30 AM</span>
+                            <span><i class="fas fa-users"></i> 20 Members</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Media & Tech</h4>
+                        <p>Handle sound, lighting, and live streaming.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Saturdays 2:00 PM</span>
+                            <span><i class="fas fa-users"></i> 12 Members</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Facilities & Maintenance</h4>
+                        <p>Keep our church facilities clean and well-maintained.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> As Needed</span>
+                            <span><i class="fas fa-users"></i> 15 Members</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Transport & Parking</h4>
+                        <p>Coordinate parking and provide transportation assistance.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Sundays 7:30 AM</span>
+                            <span><i class="fas fa-users"></i> 10 Members</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Outreach Ministries -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>Outreach & Evangelism</h2>
+                <p>Taking the love of Christ beyond our walls</p>
+            </div>
+            
+            <div class="ministry-grid">
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-hand-holding-heart"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Community Outreach</h4>
+                        <p>Serve the local community through various programs and initiatives.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Saturdays 10:00 AM</span>
+                            <span><i class="fas fa-users"></i> 30 Members</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Prison Ministry</h4>
+                        <p>Share God's love with those in correctional facilities.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Monthly</span>
+                            <span><i class="fas fa-users"></i> 8 Members</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ministry-card" data-animate>
+                    <div class="ministry-image">
+                        <i class="fas fa-heartbeat"></i>
+                    </div>
+                    <div class="ministry-content">
+                        <h4>Hospital Visitation</h4>
+                        <p>Visit and pray for the sick in hospitals and homes.</p>
+                        <div class="ministry-meta">
+                            <span><i class="fas fa-clock"></i> Weekly</span>
+                            <span><i class="fas fa-users"></i> 12 Members</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ministry Schedule -->
+    <section class="section">
+        <div class="container">
+            <div class="section-title" data-animate>
+                <h2>Ministry Schedule</h2>
+                <p>Weekly gatherings and meeting times</p>
+            </div>
+            
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>Ministry</th>
+                        <th>Day</th>
+                        <th>Time</th>
+                        <th>Location</th>
+                        <th>Contact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Sunday Celebration</td>
+                        <td>Sunday</td>
+                        <td>8:30 AM</td>
+                        <td>Main Auditorium</td>
+                        <td>Pastor John</td>
+                    </tr>
+                    <tr>
+                        <td>Prayer Service</td>
+                        <td>Wednesday</td>
+                        <td>6:00 PM</td>
+                        <td>Prayer Chapel</td>
+                        <td>Brother David</td>
+                    </tr>
+                    <tr>
+                        <td>Bible Study</td>
+                        <td>Tuesday</td>
+                        <td>6:30 PM</td>
+                        <td>Fellowship Hall</td>
+                        <td>Sister Grace</td>
+                    </tr>
+                    <tr>
+                        <td>Youth Service</td>
+                        <td>Friday</td>
+                        <td>5:00 PM</td>
+                        <td>Youth Chapel</td>
+                        <td>Brother Michael</td>
+                    </tr>
+                    <tr>
+                        <td>Children's Church</td>
+                        <td>Sunday</td>
+                        <td>8:30 AM</td>
+                        <td>Children's Wing</td>
+                        <td>Sister Abena</td>
+                    </tr>
+                    <tr>
+                        <td>All-Night Encounter</td>
+                        <td>Last Friday</td>
+                        <td>9:00 PM</td>
+                        <td>Main Auditorium</td>
+                        <td>Pastor John</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Volunteer CTA -->
+    <section class="container">
+        <div class="volunteer-cta" data-animate>
+            <h3>Find Your Place to Serve</h3>
+            <p>Every member is gifted and called to serve. Discover your spiritual gifts and find the perfect ministry fit where you can grow and make an eternal difference.</p>
+            <a href="contact.html" class="btn btn-large">
+                <i class="fas fa-hand-paper"></i>
+                Sign Up to Serve
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer (same as index.html) -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Gracehill Assembly</h3>
+                    <p>Raising Kingdom Giants through the Word, prayer, and fellowship. A place to grow, serve, and make impact.</p>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="about.html">About Us</a></li>
+                        <li><a href="ministries.html">Ministries</a></li>
+                        <li><a href="events.html">Events</a></li>
+                        <li><a href="media.html">Media</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact</h3>
+                    <ul class="footer-links">
+                        <li><a href="mailto:info@gracehillassembly.org"><i class="fas fa-envelope"></i> info@gracehillassembly.org</a></li>
+                        <li><a href="tel:+233207362469"><i class="fas fa-phone"></i> +233 20 736 2469</a></li>
+                        <li><i class="fas fa-map-marker-alt"></i> Broadcasting Junction, Weija – Accra, Ghana</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="social-links">
+                <a href="https://www.facebook.com/ram111111111/" target="_blank" aria-label="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="https://www.instagram.com/gracehill_assembly/" target="_blank" aria-label="Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <a href="https://www.tiktok.com/@gracehill_assembly/" target="_blank" aria-label="TikTok">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+                <a href="https://www.youtube.com/gracehill_assembly/" target="_blank" aria-label="YouTube">
+                    <i class="fab fa-youtube"></i>
+                </a>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Gracehill Assembly. All Rights Reserved. | 2025: Our Year of Serving the Lord</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+    <script src="js/theme.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+    </script>
+</body>
+</html>
