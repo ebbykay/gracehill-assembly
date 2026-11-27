@@ -297,6 +297,7 @@
                 <div class="form-container" data-animate>
                     <h2 style="margin-bottom: 2rem;">Send a Message</h2>
                     
+                    <p>Online delivery is not yet available. Please do not enter personal information.</p>
                     <form id="contactForm">
                         <div class="form-row">
                             <div class="form-group">
@@ -351,6 +352,7 @@
                 <h2 style="text-align: center; margin-bottom: 2rem;">Prayer Request</h2>
                 <p style="text-align: center; margin-bottom: 2rem;">Share your prayer needs with us. Our prayer team will stand in faith with you.</p>
                 
+                <p>Online prayer requests are not yet available. Please do not enter sensitive information.</p>
                 <form id="prayerForm">
                     <div class="form-row">
                         <div class="form-group">
@@ -578,15 +580,13 @@
         // Contact Form Handling
         document.getElementById('contactForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Thank you for your message! We will get back to you soon.');
-            this.reset();
+            // Delivery is unavailable; shared form handler provides status.
         });
         
         // Prayer Form Handling
         document.getElementById('prayerForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
-            alert('Your prayer request has been submitted. Our team will pray with you.');
-            this.reset();
+            // No prayer request is transmitted or stored.
         });
     </script>
 </body>
