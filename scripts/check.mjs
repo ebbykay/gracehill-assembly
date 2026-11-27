@@ -16,7 +16,7 @@ for (const page of pages) {
   }
 }
 for (const name of fs.readdirSync(path.join(root, 'packages/shared/js')).filter(n=>n.endsWith('.js'))) {
-  new vm.Script(fs.readFileSync(path.join(root,'js',name),'utf8'), {filename:name}); count++;
+  new vm.Script(fs.readFileSync(path.join(root,'packages/shared/js',name),'utf8'), {filename:name}); count++;
 }
 assert.ok(fs.statSync(path.join(root,'packages/ui/css/refinement.css')).size > 0);
 console.log('PASS: 7 pages and ' + count + ' scripts. Visual and functional release checks remain required.');
