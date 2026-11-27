@@ -1,0 +1,8 @@
+.event-categories { display:flex; justify-content:center; flex-wrap:wrap; gap:.75rem; }
+.category-btn { background:var(--surface); color:var(--text-primary); border:1px solid var(--border); border-radius:7px; cursor:pointer; }
+.category-btn[aria-pressed=true] { background:#142e65; color:white; border-color:#142e65; }
+#programme-status,.programme-note { text-align:center; margin:1.5rem auto; }
+.programme-note { max-width:760px; background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:clamp(1rem,4vw,2rem); }
+.programme-note p { margin:1rem 0; }
+.event-list-item { display:block; background:var(--surface); border:1px solid var(--border); border-radius:16px; margin-bottom:1rem; }
+.event-list-item p { margin:.75rem 0; }
