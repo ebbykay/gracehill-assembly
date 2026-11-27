@@ -28,3 +28,5 @@ jobs:
       - run: node --test tests/integration/session.test.mjs
 
       - run: node --test tests/integration/login-attempt.test.mjs
+
+      - run: node --test apps/api/src/login-callback.test.mjs
