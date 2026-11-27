@@ -102,27 +102,18 @@ class GracehillApp {
     }
 
     initForms() {
+        // No delivery service exists yet. Never simulate successful submissions.
         document.querySelectorAll('form').forEach(form => {
-            form.addEventListener('submit', function(e) {
-                const submitBtn = this.querySelector('button[type="submit"]');
-                if (submitBtn) {
-                    submitBtn.disabled = true;
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
-                    
-                    // Simulate form submission (replace with actual AJAX)
-                    setTimeout(() => {
-                        submitBtn.disabled = false;
-                        submitBtn.innerHTML = 'Send Message';
-                        
-                        // Show success message
-                        const successMsg = document.createElement('div');
-                        successMsg.className = 'alert alert-success';
-                        successMsg.innerHTML = '<i class="fas fa-check-circle"></i> Message sent successfully!';
-                        form.prepend(successMsg);
-                        
-                        setTimeout(() => successMsg.remove(), 5000);
-                    }, 2000);
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                let status = form.querySelector('[data-form-status]');
+                if (!status) {
+                    status = document.createElement('p');
+                    status.setAttribute('data-form-status', '');
+                    status.setAttribute('role', 'status');
+                    form.append(status);
                 }
+                status.textContent = 'Online submission is unavailable. Nothing was sent.';
             });
         });
     }
