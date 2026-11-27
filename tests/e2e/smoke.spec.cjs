@@ -68,3 +68,16 @@ test('programme filters distinguish past and future published events',async({pag
  await expect(page.locator('#programme-list article')).toHaveCount(2);
  await expect(page.locator('#programme-list')).not.toContainText('Draft fixture');
 });
+
+test('media search and format filters exclude drafts and unsafe URLs',async({page})=>{
+ const record=(title,format,published=true,url='https://example.com/resource')=>({title,format,published,url,description:'Test fixture'});
+ await page.route('**/data/media-resources.json',route=>route.fulfill({json:[record('Prayer video','video'),record('Faith sermon','audio'),record('Draft fixture','audio',false),record('Unsafe fixture','audio',true,'javascript:alert(1)')]}));
+ await page.goto('/media.html');
+ await expect(page.locator('#media-library article')).toHaveCount(2);
+ await page.getByRole('button',{name:'Sermons',exact:true}).click();
+ await expect(page.locator('#media-library article')).toHaveCount(1);
+ await expect(page.locator('#media-library')).toContainText('Faith sermon');
+ await page.getByLabel('Search resources').fill('unmatched');
+ await expect(page.locator('#media-library article')).toHaveCount(0);
+ await expect(page.locator('#media-status')).toContainText('No published resources');
+});
