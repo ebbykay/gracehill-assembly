@@ -24,7 +24,7 @@ BEGIN
  RAISE EXCEPTION 'Invalid format accepted';
  EXCEPTION WHEN check_violation THEN NULL; END;
 END $$;
-DO $
+DO $identity_test$
 DECLARE ident uuid;
 BEGIN
  INSERT INTO gracehill.identities(issuer,subject) VALUES ('https://issuer.example','synthetic-subject') RETURNING id INTO ident;
@@ -47,7 +47,7 @@ BEGIN
  DELETE FROM gracehill.identities WHERE id=ident;
  RAISE EXCEPTION 'Referenced identity deleted';
  EXCEPTION WHEN foreign_key_violation THEN NULL; END;
-END $;
+END $identity_test$;
 CREATE ROLE gracehill_ci_unprivileged NOLOGIN;
 SET LOCAL ROLE gracehill_ci_unprivileged;
 DO $$ BEGIN
