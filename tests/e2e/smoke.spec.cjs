@@ -33,3 +33,14 @@ test('homepage visitor journey',async({page})=>{
  await page.locator('.hero').getByRole('link',{name:'Plan Your Visit'}).click();
  await expect(page).toHaveURL(/contact\.html$/);
 });
+
+test('about page presents church purpose and beliefs',async({page})=>{
+ await page.goto('/about.html');
+ await expect(page.locator('main h1')).toHaveText('About Gracehill Assembly');
+ await expect(page.locator('.vision-card h3')).toHaveText('Our Vision');
+ await expect(page.locator('.mission-card h3')).toHaveText('Our Mission');
+ await expect(page.locator('.belief-item')).toHaveCount(6);
+ await expect(page.locator('.timeline')).toHaveCount(0);
+ await page.getByRole('link',{name:'Plan Your Visit'}).click();
+ await expect(page).toHaveURL(/contact\.html$/);
+});
