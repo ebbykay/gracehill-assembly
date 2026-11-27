@@ -28,6 +28,11 @@ jobs:
       - run: bash scripts/migrate-database.sh
       - run: bash scripts/migrate-database.sh
       - run: psql "$DATABASE_URL" -X -v ON_ERROR_STOP=1 -f tests/integration/database.sql
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm install --prefix apps/api --ignore-scripts --no-audit --no-fund
+      - run: node --test tests/integration/database-runtime.test.mjs
       - name: Detect modified applied migration
         run: |
           sed -i '2i -- synthetic checksum mismatch' database/migrations/0001_editorial_foundation.sql
