@@ -1,3 +1,5 @@
+import {createOperationsHttp} from './operations-http.mjs';
+import {createOperationsStore} from './operations-store.mjs';
 import {createMembershipHttp} from './membership-http.mjs';
 import {createMembershipStore} from './membership-store.mjs';
 import {readFileSync} from 'node:fs';
@@ -35,9 +37,10 @@ export function createAdminRuntime(config,db,identities){
  const {rows}=await db.query("SELECT i.id, COALESCE(array_agg(r.role) FILTER (WHERE r.role IS NOT NULL), ARRAY[]::text[]) AS roles FROM gracehill.identities i LEFT JOIN gracehill.identity_roles r ON r.identity_id=i.id WHERE i.id=$1 AND i.enabled=true GROUP BY i.id",[id]);
  return rows.length===1?{subject:rows[0].id,roles:rows[0].roles}:null;
  };
+ const operations=createOperationsHttp({store:createOperationsStore(db),origin:config.origin,resolvePrincipal});
  const membership=createMembershipHttp({store:createMembershipStore(db),origin:config.origin,resolvePrincipal});
  const programmes=createProgrammeHttp({store,origin:config.origin,resolvePrincipal});
  const assets=Object.fromEntries(['js','css'].map(ext=>['/admin/programmes.'+ext,{type:ext==='js'?'text/javascript; charset=utf-8':'text/css; charset=utf-8',body:readFileSync(new URL('../../administration/programmes.'+ext,import.meta.url),'utf8')}]));
  const workspace=createProgrammeWorkspace({store,resolvePrincipal,assets});
- return async(req,res,url,send)=>await auth(req,res,url,send)||await workspace(req,res,url,send)||await programmes(req,res,url,send)||await membership(req,res,url,send);
+ return async(req,res,url,send)=>await auth(req,res,url,send)||await workspace(req,res,url,send)||await programmes(req,res,url,send)||await membership(req,res,url,send)||await operations(req,res,url,send);
 }
