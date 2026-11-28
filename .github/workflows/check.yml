@@ -34,3 +34,5 @@ jobs:
       - run: node --test tests/integration/admin-auth-http.test.mjs
 
       - run: node --test tests/integration/admin-runtime.test.mjs
+
+      - run: node --test tests/integration/programme-http.test.mjs
