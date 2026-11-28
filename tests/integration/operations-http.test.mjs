@@ -1,0 +1,26 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import {createApp} from '../../apps/api/src/app.mjs';
+import {createOperationsHttp} from '../../apps/api/src/operations-http.mjs';
+const id='00000000-0000-4000-8000-000000000001',origin='https://fixture.example';
+test('operational routes validate records and separate roles',async t=>{
+ const store={list:async()=>[],create:async(k,d)=>d,transition:async(k,i,d)=>d,financeSummary:async()=>({income_minor:'100',expense_minor:'0'}),budget:async()=>null};
+ const handler=createOperationsHttp({store,origin,resolvePrincipal:async req=>req.headers['x-role']?{subject:id,roles:[req.headers['x-role']]}:null});
+ const s=createApp({adminAuth:handler});s.listen(0,'127.0.0.1');await once(s,'listening');t.after(()=>new Promise(r=>s.close(r)));
+ const req=(path,method,role,data)=>fetch('http://127.0.0.1:'+s.address().port+'/api/admin/'+path,{method,headers:{Origin:origin,'Content-Type':'application/json',...(role?{'x-role':role}:{})},...(data?{body:JSON.stringify(data)}:{})});
+ const finance={label:'Fixture',direction:'income',amountMinor:100,entryDate:'2026-11-28'};
+ assert.equal((await req('finance-entries','GET',null)).status,401);
+ assert.equal((await req('finance-entries','GET','membership')).status,403);
+ assert.equal((await req('finance-entries','POST','finance',{...finance,amountMinor:1.5})).status,400);
+ assert.equal((await req('finance-entries','POST','finance',finance)).status,201);
+ const transition={from:'submitted',to:'approved',revision:1};
+ assert.equal((await req('finance-entries/'+id+'/transition','POST','finance',transition)).status,403);
+ assert.equal((await req('finance-entries/'+id+'/transition','POST','finance_approver',transition)).status,200);
+ assert.equal((await req('finance-summary?month=2026-11-01','GET','finance')).status,200);
+ assert.equal((await req('finance-budgets/2026-11-01','PATCH','finance',{ceilingMinor:100,revision:1})).status,409);
+ assert.equal((await req('ministries','POST','ministry',{name:'Fixture ministry'})).status,201);
+ assert.equal((await req('media-resources','POST','editor',{title:'Fixture',description:'',format:'video',resourceUrl:'javascript:alert(1)'})).status,400);
+ assert.equal((await req('care-followups','GET','administrator')).status,403);
+ assert.equal((await req('announcements','POST','communications',{title:'Fixture',body:'Fixture',audience:'members',scheduledAt:null})).status,201);
+});
