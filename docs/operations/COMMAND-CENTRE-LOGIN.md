@@ -1,0 +1,2 @@
+# Command Centre login
+The main website Admin Portal link targets the dedicated authentication route. Successful OIDC callback redirects to /admin/, which now serves the existing eleven-page Command Centre with protected assets and a logout control. This first integration protects the existing fictional UI; its sample data and actions are not yet connected to persistent APIs. No production authentication is active until provider, database, and authorised accounts are configured. The public preview remains a separate demonstration. Do not treat it as a private workspace.

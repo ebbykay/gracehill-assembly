@@ -48,3 +48,5 @@ jobs:
       - run: node --test tests/integration/operations-http.test.mjs
 
       - run: node --test tests/integration/operations-workspace.test.mjs
+
+      - run: node --test tests/integration/command-centre-workspace.test.mjs
