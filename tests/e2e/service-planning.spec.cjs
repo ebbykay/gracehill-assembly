@@ -1,0 +1,27 @@
+const {test,expect}=require('@playwright/test');
+const origin='http://127.0.0.1:4174';
+test('calendar and service outline support template, sequencing and duration',async({page})=>{
+ await page.goto(origin+'/#events');
+ await expect(page.getByRole('heading',{name:'Service planning studio'})).toBeVisible();
+ await page.getByRole('button',{name:'Demo Sunday service',exact:true}).click();
+ await page.getByRole('button',{name:'Load sample Sunday template'}).click();
+ const outline=page.locator('.demo-outline');
+ await expect(outline).toContainText('100 minutes total');
+ await expect(outline.locator('li')).toHaveCount(6);
+ await page.getByLabel('Activity',{exact:true}).fill('Demo testimony');
+ await page.getByLabel('Assigned participant').fill('Demo participant');
+ await page.getByLabel('Duration (minutes)').fill('5');
+ await page.getByRole('button',{name:'Add activity'}).click();
+ await expect(outline).toContainText('105 minutes total');
+ await outline.locator('li').last().getByRole('button',{name:'Move up'}).click();
+ await expect(outline.locator('li').nth(5)).toContainText('Demo testimony');
+ await outline.locator('li').nth(5).getByRole('button',{name:'Remove activity'}).click();
+ await expect(outline).toContainText('100 minutes total');
+ await page.getByLabel('Calendar month').fill('2027-01');
+ await expect(page.locator('.demo-calendar-event')).toHaveCount(0);
+ await page.getByRole('button',{name:'Dashboard',exact:true}).click();
+ await page.getByRole('button',{name:'Programme Management',exact:true}).click();
+ await expect(page.locator('.demo-outline')).toContainText('100 minutes total');
+ await page.reload();
+ await expect(page.locator('.demo-outline')).toContainText('0 minutes total');
+});
