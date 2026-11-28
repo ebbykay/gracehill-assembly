@@ -38,6 +38,38 @@ function dashboard(){
  const actions=el('article',undefined,'command-actions');actions.append(el('h2','Quick access'),el('p','Frequently used administrative workspaces','metric-caption'));const grid=el('div',undefined,'command-action-grid');for(const [key,label,caption] of [['membership','Member directory','Profiles and households'],['attendance','Service registers','Record attendance'],['finance','Stewardship','Cash and budgets'],['events','Service planning','Calendar and outlines'],['media','Media desk','Review resources'],['reports','Reports','Operational insights']]){const b=button('',()=>navigate(key));b.classList.add('command-shortcut');const t=el('span');t.append(el('strong',label),el('small',caption));b.append(icon(key),t);grid.append(b);}actions.append(grid);
  const review=el('article',undefined,'command-review');review.append(el('h2','Review queue'),el('p','Sample work requiring attention','metric-caption'));for(const [key,label,count] of [['events','Programmes in review',events.filter(r=>r[2]==='review').length],['media','Media in review',modules.media.rows.filter(r=>r[2]==='Review').length],['care','Open care follow-ups',modules.care.rows.filter(r=>r[2]!=='Closed').length],['communications','Draft announcements',modules.communications.rows.filter(r=>r[2]==='Draft').length]]){const b=button('',()=>navigate(key));b.classList.add('review-row');b.append(el('span',label),el('strong',String(count)));review.append(b);}content.append(chart,upcoming,actions,review);
 }
+const departmentCopy={
+ membership:['People & community','Manage member profiles, households and ministry connections.'],
+ attendance:['Participation','Track service attendance and maintain sample registers.'],
+ finance:['Stewardship','Monitor cash movement, transactions and expense ceilings.'],
+ events:['Worship & programmes','Coordinate the church calendar and prepare service outlines.'],
+ ministry:['Teams & service','Coordinate ministries and their responsibilities.'],
+ media:['Content & publication','Organise media resources and editorial review.'],
+ care:['Care & follow-up','Review fictional follow-up schedules and case statuses.'],
+ communications:['Church communications','Prepare announcements and review their readiness.'],
+ reports:['Operational intelligence','Explore sample indicators across the church.'],
+ settings:['Workspace preferences','Review demonstration configuration and access boundaries.']
+};
+function departmentMetrics(key){
+ const rows=modules[key].rows,count=(status)=>rows.filter(r=>r[2].toLowerCase()===status.toLowerCase()).length;
+ const sum=kind=>rows.filter(r=>r[1]===kind).reduce((s,r)=>s+Math.round(Number(r[2])*100),0)/100;
+ const total=rows.reduce((s,r)=>s+(Number(r[2])||0),0);
+ const values={
+ membership:[['Members',rows.length],['Active',count('active')],['Households',new Set(rows.map(r=>r[1])).size]],
+ attendance:[['Total attendance',total],['Services',rows.length],['Average per service',rows.length?(total/rows.length).toFixed(1):'0']],
+ finance:[['Income',currency(sum('Income'))],['Expenses',currency(sum('Expense'))],['Net movement',currency(sum('Income')-sum('Expense'))]],
+ events:[['Programmes',rows.length],['In review',count('review')],['Published',count('published')]],
+ ministry:[['Ministries',rows.length],['Active',count('active')],['Inactive',count('inactive')]],
+ media:[['Resources',rows.length],['In review',count('review')],['Published',count('published')]],
+ care:[['Follow-ups',rows.length],['Open',count('open')],['Scheduled',count('scheduled')]],
+ communications:[['Announcements',rows.length],['Drafts',count('draft')],['Scheduled',count('scheduled')]],
+ reports:[['Members',modules.membership.rows.length],['Attendance',modules.attendance.rows.reduce((s,r)=>s+Number(r[2]),0)],['Programmes',modules.events.rows.length]],
+ settings:[['Environment','Demo'],['Authentication','Offline'],['Storage','Session only']]
+ }[key];
+ const section=el('section',undefined,'department-metrics');section.setAttribute('aria-label','Department sample indicators');
+ for(const [label,value] of values){const a=el('article',undefined,'department-metric');const symbol=el('span',undefined,'metric-icon');symbol.append(icon(key));const text=el('div');text.append(el('h2',label),el('p',String(value),'department-number'));a.append(symbol,text);section.append(a);}
+ return section;
+}
 function insights(key){
  const rows=modules[key].rows, a=el('article',undefined,'demo-insights');a.append(el('h2',({events:'Programme schedule',attendance:'Attendance by service',finance:'Financial overview',membership:'Membership overview',ministry:'Ministry coordination',media:'Publication pipeline',care:'Follow-up schedule',communications:'Announcement pipeline',reports:'Operational indicators',settings:'Access and configuration'})[key]));
  const list=el('ul',undefined,'demo-insight-list');
@@ -53,6 +85,7 @@ function insights(key){
  a.append(list);return a;
 }
 function workspace(key){
+ let metrics=departmentMetrics(key);content.append(metrics);
  let overview=insights(key);content.append(overview);
  const studio=key==='events'?window.createServicePlanningDemo(modules.events.rows):null;
  if(studio)content.append(studio.section);
@@ -67,10 +100,10 @@ function workspace(key){
  const form=el('form',undefined,'demo-form');form.hidden=true;let editing=-1;const inputs=m.fields.map((field,i)=>{const label=el('label',field),choices=field==='Category'?['Income','Expense']:field==='Format'?['Video','Audio','Photo','Podcast']:field==='Status'&&key!=='events'?({membership:['Active','New','Inactive'],ministry:['Active','Inactive'],media:['Draft','Review','Published'],care:['Open','Scheduled','Closed'],communications:['Draft','Scheduled','Sent'],settings:['Example']}[key]||[]):[];const input=el(choices.length?'select':'input');for(const choice of choices){const option=el('option',choice);option.value=choice;input.append(option);}input.setAttribute('aria-label',field);input.required=true;input.maxLength=100;input.name='field'+i;if(field==='Date'||field==='Follow-up date')input.type='date';if(field==='Attendance'||field==='Amount (GHS)'){input.type='number';input.min='0';input.step=field==='Attendance'?'1':'.01';input.max=field==='Attendance'?'1000000':'100000000';}label.append(input);form.append(label);return input;});
  const save=el('button','Save sample','demo-button');save.type='submit';form.append(save,button('Cancel',()=>{form.hidden=true;}));
  function open(index){editing=index;inputs.forEach((input,i)=>input.value=index<0?(input.tagName==='SELECT'?input.options[0].value:''):m.rows[index][i]);if(key==='events'&&index<0)inputs[2].value='draft';if(key==='events')inputs[2].readOnly=true;form.hidden=false;inputs[0].focus();}
- function draw(){if(operations)operations.refresh();if(directory)directory.refresh();if(studio)studio.refresh();const updated=insights(key);overview.replaceWith(updated);overview=updated;tbody.replaceChildren();const q=search.value.toLowerCase();m.rows.forEach((row,i)=>{if(!row.join(' ').toLowerCase().includes(q))return;const tr=el('tr');row.forEach(v=>tr.append(el('td',v)));const actions=el('td');if(key!=='events'||row[2]==='draft')actions.append(button('Edit',()=>open(i)));if(key==='events'){const next={draft:[['review','Submit for review']],review:[['draft','Return to draft'],['published','Publish sample']],published:[['archived','Archive']]}[row[2]]||[];for(const [status,label] of next)actions.append(button(label,()=>{row[2]=status;notice.textContent='Sample status changed to '+status;draw();}));}tr.append(actions);tbody.append(tr);});if(!tbody.children.length){const tr=el('tr'),td=el('td','No matching sample records.');td.colSpan=m.fields.length+1;tr.append(td);tbody.append(tr);}}
+ function draw(){const newMetrics=departmentMetrics(key);metrics.replaceWith(newMetrics);metrics=newMetrics;if(operations)operations.refresh();if(directory)directory.refresh();if(studio)studio.refresh();const updated=insights(key);overview.replaceWith(updated);overview=updated;tbody.replaceChildren();const q=search.value.toLowerCase();m.rows.forEach((row,i)=>{if(!row.join(' ').toLowerCase().includes(q))return;const tr=el('tr');row.forEach((v,i)=>{const td=el('td');if(m.fields[i]==='Status'||m.fields[i]==='Category'){const badge=el('span',v,'record-status');badge.dataset.status=v.toLowerCase();td.append(badge);}else td.textContent=v;tr.append(td);});const actions=el('td');if(key!=='events'||row[2]==='draft')actions.append(button('Edit',()=>open(i)));if(key==='events'){const next={draft:[['review','Submit for review']],review:[['draft','Return to draft'],['published','Publish sample']],published:[['archived','Archive']]}[row[2]]||[];for(const [status,label] of next)actions.append(button(label,()=>{form.hidden=true;editing=-1;row[2]=status;notice.textContent='Sample status changed to '+status;draw();}));}tr.append(actions);tbody.append(tr);});if(!tbody.children.length){const tr=el('tr'),td=el('td','No matching sample records.');td.colSpan=m.fields.length+1;tr.append(td);tbody.append(tr);}}
  form.addEventListener('submit',e=>{e.preventDefault();const values=inputs.map(i=>i.value.trim());if(values.some(v=>!v))return;if(editing<0)m.rows.push(values);else m.rows[editing].splice(0,m.rows[editing].length,...values);form.hidden=true;notice.textContent='Sample record saved in memory only.';draw();});
- controls.append(search,button(m.action,()=>open(-1)));search.addEventListener('input',draw);panel.append(controls,notice,form,wrap);content.append(panel);draw();
+ controls.append(search,button(m.action,()=>open(-1)));search.addEventListener('input',draw);panel.append(el('h2','Record management'),el('p','Search, review or update fictional records.','metric-caption'),controls,notice,form,wrap);content.append(panel);draw();
 }
-function navigate(key,update=true){if(key!=='dashboard'&&!Object.hasOwn(modules,key))key='dashboard';const active=buttons.find(b=>b.dataset.department===key);buttons.forEach(b=>{b.classList.toggle('active',b===active);b.setAttribute('aria-pressed',String(b===active));});title.textContent=active.textContent;document.getElementById('adminCrumb').textContent=active.textContent;content.classList.toggle('command-grid',key==='dashboard');closeMenu();description.textContent=key==='dashboard'?'Your church operations at a glance.':key==='events'?'Interactive editorial workflow simulation; the real API is not connected here.':'Interactive design demonstration with fictional records only.';content.replaceChildren();if(key==='dashboard')dashboard();else workspace(key);if(update)history.replaceState(null,'','#'+key);title.focus();}
+function navigate(key,update=true){if(key!=='dashboard'&&!Object.hasOwn(modules,key))key='dashboard';const active=buttons.find(b=>b.dataset.department===key);buttons.forEach(b=>{b.classList.toggle('active',b===active);b.setAttribute('aria-pressed',String(b===active));});title.textContent=active.textContent;document.getElementById('adminCrumb').textContent=active.textContent;content.classList.toggle('command-grid',key==='dashboard');content.classList.toggle('department-grid',key!=='dashboard');document.getElementById('departmentEyebrow').textContent=key==='dashboard'?'CHURCH OPERATIONS':departmentCopy[key][0].toUpperCase();closeMenu();description.textContent=key==='dashboard'?'Your church operations at a glance.':departmentCopy[key][1];content.replaceChildren();if(key==='dashboard')dashboard();else workspace(key);if(update&&location.hash!=='#'+key)history.pushState(null,'','#'+key);title.focus();}
 buttons.forEach(b=>b.addEventListener('click',()=>navigate(b.dataset.department)));window.addEventListener('hashchange',()=>navigate(location.hash.slice(1),false));navigate(location.hash.slice(1)||'dashboard',false);
 })();
