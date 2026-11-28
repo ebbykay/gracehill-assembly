@@ -1,0 +1,24 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import {createApp} from '../../apps/api/src/app.mjs';
+import {createMembershipHttp} from '../../apps/api/src/membership-http.mjs';
+const id='00000000-0000-4000-8000-000000000001',origin='https://fixture.example';
+test('membership and attendance routes enforce authorization, origin, validation and optimistic revisions',async t=>{
+ const store={members:async()=>[],createMember:async d=>({id,...d}),editMember:async()=>null,record:async(s,m,d)=>({member_id:m,...d})};
+ const handler=createMembershipHttp({store,origin,resolvePrincipal:async req=>req.headers['x-fixture-role']?{subject:id,roles:[req.headers['x-fixture-role']]}:null});
+ const server=createApp({adminAuth:handler});server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>new Promise(r=>server.close(r)));
+ const base='http://127.0.0.1:'+server.address().port+'/api/admin/';
+ const req=(path,method='GET',role='membership',data,source=origin)=>fetch(base+path,{method,headers:{...(role?{'x-fixture-role':role}:{}),Origin:source,'Content-Type':'application/json'},...(data?{body:JSON.stringify(data)}:{})});
+ const member={displayName:'Synthetic member',householdId:null,status:'active',joinedOn:'2026-11-28'};
+ assert.equal((await req('members','GET',null)).status,401);
+ assert.equal((await req('members','GET','finance')).status,403);
+ assert.equal((await req('members')).status,200);
+ assert.equal((await req('members','POST','membership',member,'https://foreign.example')).status,403);
+ assert.equal((await req('members','POST','membership',{...member,joinedOn:'2026-02-30'})).status,400);
+ assert.equal((await req('members','POST','membership',member)).status,201);
+ assert.equal((await req('members/'+id,'PATCH','membership',{...member,revision:1})).status,409);
+ assert.equal((await req('attendance-services/'+id+'/register/'+id,'PUT','membership',{present:'true',revision:0})).status,400);
+ assert.equal((await req('attendance-services/'+id+'/register/'+id,'PUT','membership',{present:true,revision:0})).status,200);
+ assert.equal((await req('attendance-services/'+id+'/register/'+id,'PUT','editor',{present:true,revision:0})).status,403);
+});
