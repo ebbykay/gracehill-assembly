@@ -1,0 +1,19 @@
+// Fictional membership directory; memory only, no sensitive information.
+window.createMembershipDemo=(()=>{
+ const profiles=new Map();
+ const el=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
+ const button=(text,fn)=>{const b=el('button',text);b.type='button';b.className='demo-button';b.addEventListener('click',fn);return b;};
+ return function(rows){
+ const section=el('article');section.className='demo-membership';section.append(el('h2','Member and household directory'),el('p','Fictional profiles only. Do not enter personal or contact information.'));
+ const filters=el('div');filters.className='demo-controls';const filter=el('select');filter.setAttribute('aria-label','Filter membership status');for(const s of ['All statuses','Active','New','Inactive']){const o=el('option',s);o.value=s;filter.append(o);}
+ const query=el('input');query.type='search';query.setAttribute('aria-label','Search member profiles');query.placeholder='Search profiles or households';filters.append(query,filter);
+ const directory=el('div');directory.className='demo-member-grid';const detail=el('section');detail.className='demo-member-detail';detail.hidden=true;
+ let selected=null;
+ function record(row){if(!profiles.has(row))profiles.set(row,{joined:'2026-11-01',ministry:'Not assigned',history:[]});return profiles.get(row);}
+ function profile(row){selected=row;const p=record(row);detail.hidden=false;detail.replaceChildren(el('h3',row[0]),el('p','Fictional member profile · '+row[2]),el('p','Household: '+row[1]),el('p','Sample joined date: '+p.joined),el('p','Ministry: '+p.ministry));
+ const peers=rows.filter(r=>r!==row&&r[1]===row[1]);detail.append(el('h4','Household members'));const ul=el('ul');for(const peer of peers)ul.append(el('li',peer[0]));if(!peers.length)ul.append(el('li','No other sample household members.'));detail.append(ul);
+ const form=el('form');form.className='demo-form';const joined=el('input');joined.type='date';joined.required=true;joined.value=p.joined;joined.setAttribute('aria-label','Sample joined date');const ministry=el('select');ministry.setAttribute('aria-label','Sample ministry assignment');for(const name of ['Not assigned','Music','Media','Prayer','Hospitality']){const o=el('option',name);o.value=name;ministry.append(o);}ministry.value=p.ministry;const a=el('label','Sample joined date'),b=el('label','Sample ministry assignment');a.append(joined);b.append(ministry);const save=el('button','Save profile details');save.className='demo-button';save.type='submit';form.append(a,b,save);form.addEventListener('submit',e=>{e.preventDefault();if(!joined.value)return;p.joined=joined.value;p.ministry=ministry.value;p.history.push('Sample profile details updated');profile(row);});detail.append(form,el('h4','Session activity history'));const log=el('ul');for(const item of p.history)log.append(el('li',item));if(!p.history.length)log.append(el('li','No sample changes yet.'));detail.append(log,button('Close profile',()=>{selected=null;detail.hidden=true;}));}
+ function refresh(){directory.replaceChildren();const q=query.value.toLowerCase();for(const row of rows){if(filter.value!=='All statuses'&&row[2]!==filter.value||!row.join(' ').toLowerCase().includes(q))continue;const card=el('article');card.append(el('h3',row[0]),el('p',row[1]),el('p',row[2]),button('View profile',()=>profile(row)));directory.append(card);}if(!directory.children.length)directory.append(el('p','No matching fictional members.'));if(selected&&rows.includes(selected))profile(selected);}
+ query.addEventListener('input',refresh);filter.addEventListener('change',refresh);section.append(filters,directory,detail);refresh();return {section,refresh};
+ };
+})();
