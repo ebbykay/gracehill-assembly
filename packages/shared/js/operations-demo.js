@@ -29,7 +29,7 @@ window.createOperationsDemo=(()=>{
  }else if(key==='reports'){
  const rows=modules.finance.rows,attendance=modules.attendance.rows;
  const metrics=[['Members',modules.membership.rows.length],['Active members',modules.membership.rows.filter(r=>r[2]==='Active').length],['Recorded attendance',attendance.reduce((s,r)=>s+Number(r[2]),0)],['Services recorded',attendance.length],['Programmes',modules.events.rows.length],['Published programmes',modules.events.rows.filter(r=>r[2]==='published').length],['Cash movement',money(sum(rows,'Income')-sum(rows,'Expense'))],['Open care cases',modules.care.rows.filter(r=>r[2]!=='Closed').length]];
- for(const [label,value] of metrics)line(body,label,value);
+ const report=el('div');report.className='report-grid';for(const [label,value] of metrics){const tile=el('div');tile.className='report-tile';line(tile,label,value);report.append(tile);}body.append(report);body.append(btn('Download sample report CSV',()=>{const quote=v=>'"'+String(v).replace(/"/g,'""')+'"';const csv=[['Metric','Value'],...metrics].map(row=>row.map(quote).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));const a=el('a');a.href=url;a.download='gracehill-sample-report.csv';document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);}));
  body.append(btn('Print sample operational report',()=>{document.body.classList.add('printing-operations');try{window.print();}finally{document.body.classList.remove('printing-operations');}}));
  }else{
  const config={ministry:['Active','Inactive'],media:['Draft','Review','Published'],care:['Open','Scheduled','Closed'],communications:['Draft','Scheduled','Sent']}[key];
