@@ -86,3 +86,25 @@ test('membership and attendance preserve foreign keys, uniqueness and restricted
  ]){await c.query('SAVEPOINT rejected');await assert.rejects(c.query(sql,args),{code});await c.query('ROLLBACK TO SAVEPOINT rejected');}
  }finally{await c.query('ROLLBACK');c.release();}
 });
+
+test('financial approval rejects self review and preserves integer currency amounts',{skip:!process.env.DATABASE_URL},async t=>{
+ const {createOperationsStore}=await import('../../apps/api/src/operations-store.mjs');
+ const pool=await openDatabase(process.env.DATABASE_URL);t.after(()=>pool.end());
+ const c=await pool.connect();let actors=[];
+ try{
+ for(const name of ['finance-fixture-a','finance-fixture-b']){const {rows:[row]}=await c.query("INSERT INTO gracehill.identities(issuer,subject,enabled) VALUES ('https://fixture.example',$1,true) RETURNING id",[name]);actors.push(row.id);}
+ await c.query('SET ROLE gracehill_runtime');
+ // Reuse the real restricted connection for the store transactions.
+ const store=createOperationsStore({connect:async()=>({query:c.query.bind(c),release(){}}),query:c.query.bind(c)});
+ const [a,b]=actors;
+ const entry=await store.create('finance-entries',{label:'Fixture',direction:'income',amountMinor:12345,entryDate:'2099-01-01'},a,a);
+ assert.equal(entry.amount_minor,'12345');
+ const submitted=await store.transition('finance-entries',entry.id,{from:'draft',to:'submitted',revision:1},a,a,'finance:write');
+ assert.equal(submitted.revision,2);
+ assert.equal(await store.transition('finance-entries',entry.id,{from:'submitted',to:'approved',revision:2},a,a,'finance:approve'),null);
+ const approved=await store.transition('finance-entries',entry.id,{from:'submitted',to:'approved',revision:2},b,b,'finance:approve');
+ assert.equal(approved.status,'approved');
+ assert.equal((await store.financeSummary('2099-01-01')).income_minor,'12345');
+ assert.equal(await store.transition('finance-entries',entry.id,{from:'submitted',to:'rejected',revision:2},b,b,'finance:approve'),null);
+ }finally{await c.query('RESET ROLE');if(actors.length){await c.query('DELETE FROM gracehill.audit_events WHERE actor_id=ANY($1::uuid[])',[actors]);await c.query('DELETE FROM gracehill.finance_entries WHERE created_by=ANY($1::uuid[])',[actors]);await c.query('DELETE FROM gracehill.identities WHERE id=ANY($1::uuid[])',[actors]);}c.release();}
+});
