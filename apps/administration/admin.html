@@ -2,23 +2,23 @@
 <html lang="en" data-theme="light">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Administration Preview | Gracehill Assembly</title><link rel="stylesheet" href="css/style.css"><link rel="stylesheet" href="css/refinement.css"><link rel="stylesheet" href="css/administration.css"></head>
 <body class="administration-preview">
-<header class="admin-top"><strong>Gracehill Assembly · Administration</strong><span>Interactive demonstration — not authenticated</span></header>
+<header class="admin-top"><div class="admin-brand"><span class="brand-monogram" aria-hidden="true">G</span><div><strong>Gracehill Assembly</strong><small>Church operations</small></div></div><div class="admin-top-tools"><span class="demo-environment">Demo workspace</span><button id="adminMenuToggle" type="button" aria-controls="adminNavigation" aria-expanded="false">Menu</button></div></header>
 <div class="admin-wrapper">
-<nav class="admin-sidebar" aria-label="Administration modules">
+<nav id="adminNavigation" class="admin-sidebar" aria-label="Administration modules"><p class="admin-nav-heading">WORKSPACE</p>
 <button type="button" class="admin-nav-item active" data-department="dashboard" aria-pressed="true">Dashboard</button>
 <button type="button" class="admin-nav-item" data-department="membership" aria-pressed="false">Membership Management</button>
 <button type="button" class="admin-nav-item" data-department="attendance" aria-pressed="false">Attendance</button>
 <button type="button" class="admin-nav-item" data-department="finance" aria-pressed="false">Financial Management</button>
-<button type="button" class="admin-nav-item" data-department="events" aria-pressed="false">Programme Management</button>
+<p class="admin-nav-heading">CHURCH OPERATIONS</p><button type="button" class="admin-nav-item" data-department="events" aria-pressed="false">Programme Management</button>
 <button type="button" class="admin-nav-item" data-department="ministry" aria-pressed="false">Ministry Management</button>
 <button type="button" class="admin-nav-item" data-department="media" aria-pressed="false">Media Management</button>
 <button type="button" class="admin-nav-item" data-department="care" aria-pressed="false">Pastoral Care</button>
 <button type="button" class="admin-nav-item" data-department="communications" aria-pressed="false">Communications</button>
-<button type="button" class="admin-nav-item" data-department="reports" aria-pressed="false">Reports &amp; Analytics</button>
+<p class="admin-nav-heading">INSIGHTS &amp; SYSTEM</p><button type="button" class="admin-nav-item" data-department="reports" aria-pressed="false">Reports &amp; Analytics</button>
 <button type="button" class="admin-nav-item" data-department="settings" aria-pressed="false">Settings</button>
 </nav>
 <main id="main-content" class="admin-content">
-<p class="preview-warning">Demonstration only. All sample records are fictional. Changes reset on reload; no data is sent to a server. Do not enter real church information.</p>
+<div class="admin-breadcrumb">Gracehill / <span id="adminCrumb">Dashboard</span></div><p class="preview-warning">Demonstration only. All sample records are fictional. Changes reset on reload; no data is sent to a server. Do not enter real church information.</p>
 <h1 id="adminPageTitle" tabindex="-1">Dashboard</h1>
 <p id="module-description">Review the planned operational modules and their readiness.</p>
 <div id="module-content" class="admin-module-grid">
@@ -26,7 +26,7 @@
 <article><h2>Data and security</h2><p>Authentication, permissions and protected storage are required before operational use.</p></article>
 </div>
 </main></div>
-<footer class="admin-bottom">Gracehill Assembly · Internal application design preview</footer>
+<footer class="admin-bottom">Gracehill Assembly <span>·</span> Church operations workspace <span>·</span> Demonstration</footer>
 <script src="js/service-planning-demo.js" defer></script>
 <script src="js/membership-demo.js" defer></script>
 <script src="js/operations-demo.js" defer></script>
