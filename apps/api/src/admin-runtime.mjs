@@ -1,3 +1,4 @@
+import {createOperationsWorkspace} from './operations-workspace.mjs';
 import {createOperationsHttp} from './operations-http.mjs';
 import {createOperationsStore} from './operations-store.mjs';
 import {createMembershipHttp} from './membership-http.mjs';
@@ -41,6 +42,8 @@ export function createAdminRuntime(config,db,identities){
  const membership=createMembershipHttp({store:createMembershipStore(db),origin:config.origin,resolvePrincipal});
  const programmes=createProgrammeHttp({store,origin:config.origin,resolvePrincipal});
  const assets=Object.fromEntries(['js','css'].map(ext=>['/admin/programmes.'+ext,{type:ext==='js'?'text/javascript; charset=utf-8':'text/css; charset=utf-8',body:readFileSync(new URL('../../administration/programmes.'+ext,import.meta.url),'utf8')}]));
+ const operationAssets=Object.fromEntries(['js','css'].map(ext=>['/admin/operations.'+ext,{type:ext==='js'?'text/javascript; charset=utf-8':'text/css; charset=utf-8',body:readFileSync(new URL('../../administration/operations.'+ext,import.meta.url),'utf8')}]));
+ const operationWorkspace=createOperationsWorkspace({resolvePrincipal,assets:operationAssets});
  const workspace=createProgrammeWorkspace({store,resolvePrincipal,assets});
- return async(req,res,url,send)=>await auth(req,res,url,send)||await workspace(req,res,url,send)||await programmes(req,res,url,send)||await membership(req,res,url,send)||await operations(req,res,url,send);
+ return async(req,res,url,send)=>await auth(req,res,url,send)||await operationWorkspace(req,res,url,send)||await workspace(req,res,url,send)||await programmes(req,res,url,send)||await membership(req,res,url,send)||await operations(req,res,url,send);
 }
