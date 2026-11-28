@@ -8,5 +8,6 @@ test('hosted preview exposes only health information',async t=>{
  assert.equal((await fetch(base+'/health/live')).status,200);
  assert.equal((await fetch(base+'/health/ready')).status,503);
  for(const path of ['/admin/','/auth/login','/api/admin/programmes','/internal/access/programme-publish'])assert.equal((await fetch(base+path)).status,404);
+ const portal=await fetch(base+'/admin/login');assert.equal(portal.status,200);const html=await portal.text();assert.match(html,/Leaders Portal/);assert.match(html,/not activated yet/);assert.doesNotMatch(html,/action="\/auth\/login"/);assert.equal((await fetch(base+'/admin/login.css')).status,200);
  assert.equal((await fetch(base+'/health/live',{method:'POST'})).status,405);
 });
