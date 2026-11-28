@@ -16,7 +16,7 @@ test('programme demo creates and advances a fictional draft',async({page})=>{
  await page.getByRole('button',{name:'Create sample programme'}).click();
  await page.getByLabel('Programme',{exact:true}).fill('Demo browser fixture');
  await page.getByLabel('Date',{exact:true}).fill('2099-01-01');
- await page.getByRole('button',{name:'Save sample'}).click();
+ await page.getByRole('button',{name:'Save sample',exact:true}).click();
  await page.getByRole('searchbox').fill('Demo browser fixture');
  const row=page.locator('tbody tr').filter({hasText:'Demo browser fixture'});
  await row.getByRole('button',{name:'Submit for review'}).click();
@@ -31,7 +31,7 @@ test('finance form updates summary without external writes',async({page})=>{
  await page.getByLabel('Transaction',{exact:true}).fill('Demo expense fixture');
  await page.getByLabel('Category',{exact:true}).selectOption('Expense');
  await page.getByLabel('Amount (GHS)',{exact:true}).fill('30');
- await page.getByRole('button',{name:'Save sample'}).click();
+ await page.getByRole('button',{name:'Save sample',exact:true}).click();
  await expect(page.locator('tbody')).toContainText('Demo expense fixture');
  await expect(page.locator('.demo-insights')).toContainText('300');
 });
