@@ -1,3 +1,4 @@
+import {serveLeadersLogin} from './leaders-login.mjs';
 import {clearSessionCookie} from './session-security.mjs';
 import {clearLoginCookie} from './login-attempt-store.mjs';
 const sessionName='__Host-gracehill_session',loginName='__Host-gracehill_login';
@@ -13,7 +14,8 @@ export function createAdminAuthHttp({login,sessions,origin,limit=20,now=Date.now
  let windowStart=now(),count=0;
  return async(req,res,url,send)=>{
  const path=url.pathname;
- if(workspace&&(path==='/admin/'||path==='/admin/login')){
+ if(workspace&&serveLeadersLogin(req,res,path,true))return true;
+ if(workspace&&path==='/admin/'){
  res.setHeader('Referrer-Policy','no-referrer');res.setHeader('X-Frame-Options','DENY');res.setHeader('Content-Security-Policy',"default-src 'none'; frame-ancestors 'none'; form-action 'self'; base-uri 'none'");
  if(req.method!=='GET'){res.setHeader('Allow','GET');send(405,{error:'method_not_allowed'});return true;}
  if(path==='/admin/'&&!await sessions.resolve(cookie(req,sessionName))){res.setHeader('Location','/admin/login');send(303,{});return true;}
