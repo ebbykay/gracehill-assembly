@@ -21,6 +21,10 @@ const icons={dashboard:'M3 3h7v7H3z M14 3h7v7h-7z M3 14h7v7H3z M14 14h7v7h-7z',m
 function icon(key){const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.setAttribute('viewBox','0 0 24 24');svg.setAttribute('aria-hidden','true');svg.setAttribute('fill','none');svg.setAttribute('stroke','currentColor');svg.setAttribute('stroke-width','1.65');svg.setAttribute('stroke-linecap','round');svg.setAttribute('stroke-linejoin','round');const p=document.createElementNS(svg.namespaceURI,'path');p.setAttribute('d',icons[key]||icons.dashboard);svg.append(p);return svg;}
 for(const b of buttons){const label=el('span',b.textContent.trim());b.replaceChildren(icon(b.dataset.department),label);}
 const menu=document.getElementById('adminMenuToggle'),nav=document.getElementById('adminNavigation');
+const theme=document.getElementById('adminThemeToggle');
+ function setAppearance(dark){document.documentElement.dataset.adminAppearance=dark?'dark':'light';theme.setAttribute('aria-pressed',String(dark));theme.textContent=dark?'Light mode':'Dark mode';}
+ theme.addEventListener('click',()=>setAppearance(theme.getAttribute('aria-pressed')!=='true'));
+ setAppearance(false);
 function closeMenu(){nav.classList.remove('is-open');menu.setAttribute('aria-expanded','false');}
 menu.addEventListener('click',()=>{const open=nav.classList.toggle('is-open');menu.setAttribute('aria-expanded',String(open));});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('is-open')){closeMenu();menu.focus();}});
