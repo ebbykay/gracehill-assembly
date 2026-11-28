@@ -69,3 +69,20 @@ test('programme runtime role can write revisions but cannot delete',{skip:!proce
  await client.query('ROLLBACK TO SAVEPOINT restricted_delete');
  }finally{await client.query('ROLLBACK');client.release();}
 });
+
+test('membership and attendance preserve foreign keys, uniqueness and restricted runtime access',{skip:!process.env.DATABASE_URL},async t=>{
+ const pool=await openDatabase(process.env.DATABASE_URL);t.after(()=>pool.end());const c=await pool.connect();
+ try{
+ await c.query('BEGIN');await c.query('SET LOCAL ROLE gracehill_runtime');
+ const {rows:[household]}=await c.query("INSERT INTO gracehill.households(label) VALUES ('Synthetic household') RETURNING id");
+ const {rows:[member]}=await c.query("INSERT INTO gracehill.members(display_name,household_id,joined_on,status) VALUES ('Synthetic member',$1,'2026-11-28','active') RETURNING id,revision",[household.id]);
+ assert.equal(member.revision,1);
+ const {rows:[service]}=await c.query("INSERT INTO gracehill.attendance_services(title,service_date) VALUES ('Synthetic service','2026-11-28') RETURNING id");
+ await c.query('INSERT INTO gracehill.attendance_entries(service_id,member_id,present) VALUES ($1,$2,true)',[service.id,member.id]);
+ for(const [sql,args,code] of [
+ ['INSERT INTO gracehill.attendance_entries(service_id,member_id,present) VALUES ($1,$2,true)',[service.id,member.id],'23505'],
+ ["INSERT INTO gracehill.members(display_name,household_id,joined_on) VALUES ('Invalid','00000000-0000-4000-8000-000000000001','2026-11-28')",[],'23503'],
+ ['DELETE FROM gracehill.members WHERE id=$1',[member.id],'42501']
+ ]){await c.query('SAVEPOINT rejected');await assert.rejects(c.query(sql,args),{code});await c.query('ROLLBACK TO SAVEPOINT rejected');}
+ }finally{await c.query('ROLLBACK');c.release();}
+});
