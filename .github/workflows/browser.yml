@@ -11,6 +11,7 @@ jobs:
         with:
           node-version: '24'
       - run: node scripts/build-pages.mjs
+      - run: node scripts/build-admin-preview.mjs
       - run: npm install --no-save --package-lock=false @playwright/test@1.51.1
       - run: npx playwright install --with-deps chromium
       - run: npx playwright test
