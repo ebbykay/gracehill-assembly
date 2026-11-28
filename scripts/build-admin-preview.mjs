@@ -9,4 +9,5 @@ for(const name of ['style.css','refinement.css','administration.css'])fs.copyFil
 fs.copyFileSync('packages/shared/js/administration.js',path.join(out,'js/administration.js'));
 fs.copyFileSync('packages/shared/js/service-planning-demo.js',path.join(out,'js/service-planning-demo.js'));
 fs.copyFileSync('packages/shared/js/membership-demo.js',path.join(out,'js/membership-demo.js'));
+fs.copyFileSync('packages/shared/js/operations-demo.js',path.join(out,'js/operations-demo.js'));
 console.log('Interactive synthetic administration demo built; never publish as an authenticated service.');
