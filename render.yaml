@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: gracehill-api-staging
+    runtime: node
+    plan: free
+    region: frankfurt
+    branch: main
+    autoDeployTrigger: off
+    buildCommand: npm install --prefix apps/api --ignore-scripts --no-audit --no-fund && node --test tests/integration/hosted-preview.test.mjs tests/integration/hosted-db-health.test.mjs
+    startCommand: node apps/api/src/hosted-preview-server.mjs
+    healthCheckPath: /health/live
+    envVars:
+      - key: NODE_VERSION
+        value: "24"
+      - key: STAGING_DATABASE_URL
+        sync: false
