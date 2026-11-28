@@ -1,0 +1,20 @@
+const {test,expect}=require('@playwright/test');
+test('member directory supports household links and profile editing',async({page})=>{
+ await page.goto('http://127.0.0.1:4174/#membership');
+ const directory=page.locator('.demo-membership');
+ await expect(directory.getByRole('heading',{name:'Member and household directory'})).toBeVisible();
+ await directory.getByLabel('Filter membership status').selectOption('Active');
+ await expect(directory.locator('.demo-member-grid article')).toHaveCount(1);
+ await directory.getByRole('button',{name:'View profile'}).click();
+ await directory.getByLabel('Sample ministry assignment').selectOption('Music');
+ await directory.getByRole('button',{name:'Save profile details'}).click();
+ await expect(directory.locator('.demo-member-detail')).toContainText('Ministry: Music');
+ await expect(directory.locator('.demo-member-detail')).toContainText('Sample profile details updated');
+ await page.getByRole('button',{name:'Add fictional member'}).click();
+ await page.getByLabel('Member',{exact:true}).fill('Demo Household Peer');
+ await page.getByLabel('Household',{exact:true}).fill('Household A');
+ await page.getByRole('button',{name:'Save sample'}).click();
+ await expect(directory.locator('.demo-member-detail')).toContainText('Demo Household Peer');
+ await page.reload();
+ await expect(directory).not.toContainText('Demo Household Peer');
+});
