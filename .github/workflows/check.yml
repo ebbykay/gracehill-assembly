@@ -40,3 +40,5 @@ jobs:
       - run: node --test tests/integration/hosted-preview.test.mjs
 
       - run: node --test tests/integration/hosted-db-health.test.mjs
+
+      - run: node --test tests/integration/programme-workspace.test.mjs
