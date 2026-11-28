@@ -1,7 +1,7 @@
 import {clearSessionCookie} from './session-security.mjs';
 import {clearLoginCookie} from './login-attempt-store.mjs';
 const sessionName='__Host-gracehill_session',loginName='__Host-gracehill_login';
-function cookie(req,name){
+export function cookie(req,name){
  const matches=(req.headers.cookie||'').split(';').map(v=>v.trim()).filter(v=>v.startsWith(name+'='));
  if(matches.length!==1)return null;
  const value=matches[0].slice(name.length+1);

@@ -53,3 +53,19 @@ test('login attempt consumption is atomic and browser bound',{skip:!process.env.
  await client.query('ROLLBACK');
  }finally{await client.query('ROLLBACK');client.release();}
 });
+
+test('programme runtime role can write revisions but cannot delete',{skip:!process.env.DATABASE_URL},async t=>{
+ const pool=await openDatabase(process.env.DATABASE_URL);t.after(()=>pool.end());
+ const client=await pool.connect();
+ try{
+ await client.query('BEGIN');
+ await client.query('SET LOCAL ROLE gracehill_runtime');
+ const {rows:[row]}=await client.query("INSERT INTO gracehill.programmes(title,description,starts_at,ends_at) VALUES ('Synthetic programme','Fixture','2099-01-01T09:00:00Z','2099-01-01T10:00:00Z') RETURNING id,revision,status");
+ assert.equal(row.revision,1);assert.equal(row.status,'draft');
+ const updated=await client.query("UPDATE gracehill.programmes SET status='review',revision=revision+1 WHERE id=$1 AND revision=1 RETURNING revision",[row.id]);
+ assert.equal(updated.rows[0].revision,2);
+ await client.query('SAVEPOINT restricted_delete');
+ await assert.rejects(client.query('DELETE FROM gracehill.programmes WHERE id=$1',[row.id]),{code:'42501'});
+ await client.query('ROLLBACK TO SAVEPOINT restricted_delete');
+ }finally{await client.query('ROLLBACK');client.release();}
+});
