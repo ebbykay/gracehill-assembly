@@ -1,0 +1,35 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {once} from 'node:events';
+import {createApp} from '../../apps/api/src/app.mjs';
+import {createProgrammeHttp,validateProgramme} from '../../apps/api/src/programme-http.mjs';
+const id='aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
+const data={title:'Synthetic programme',description:'Fixture',startsAt:'2099-01-01T09:00:00Z',endsAt:'2099-01-01T10:00:00Z'};
+test('programme validation rejects invalid input',()=>{
+ assert.deepEqual(validateProgramme(data),data);
+ assert.equal(validateProgramme({...data,title:' '}),null);
+ assert.equal(validateProgramme({...data,endsAt:'2098-01-01T00:00:00Z'}),null);
+ assert.equal(validateProgramme({...data,startsAt:'2099-01-01'}),null);
+});
+test('programme API enforces origin, role, workflow and conflicts',async t=>{
+ let row=null;
+ const store={list:async()=>row?[row]:[],create:async d=>row={id,...d,status:'draft',revision:1},edit:async(i,r,d)=>row?.revision===r&&row.status==='draft'?(row={...row,...d,revision:r+1}):null,transition:async(i,r,from,to)=>row?.revision===r&&row.status===from?(row={...row,status:to,revision:r+1}):null};
+ const handler=createProgrammeHttp({store,origin:'https://admin.example',resolvePrincipal:async req=>req.headers['x-fixture-role']?{subject:id,roles:[req.headers['x-fixture-role']]}:null});
+ const server=createApp({adminAuth:handler});server.listen(0,'127.0.0.1');await once(server,'listening');t.after(()=>new Promise(r=>server.close(r)));
+ const url='http://127.0.0.1:'+server.address().port+'/api/admin/programmes';
+ const request=(method,role,body,path='',origin='https://admin.example')=>fetch(url+path,{method,headers:{...(role?{'x-fixture-role':role}:{}),Origin:origin,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})});
+ assert.equal((await request('GET')).status,401);
+ assert.equal((await request('GET','finance')).status,403);
+ assert.equal((await request('POST','editor',data,'','https://wrong.example')).status,403);
+ assert.equal((await request('POST','publisher',data)).status,403);
+ assert.equal((await request('POST','editor',data)).status,201);
+ assert.equal((await request('PATCH','editor',{...data,revision:1},'/'+id)).status,200);
+ assert.equal((await request('PATCH','editor',{...data,revision:1},'/'+id)).status,409);
+ const transition=(role,revision,from,to)=>request('POST',role,{revision,from,to},'/'+id+'/transition');
+ assert.equal((await transition('editor',2,'draft','published')).status,400);
+ assert.equal((await transition('editor',2,'draft','review')).status,200);
+ assert.equal((await transition('editor',3,'review','published')).status,403);
+ assert.equal((await transition('publisher',3,'review','published')).status,200);
+ assert.equal((await transition('publisher',4,'published','archived')).status,200);
+ assert.equal((await request('GET','editor')).status,200);
+});
