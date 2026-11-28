@@ -1,6 +1,6 @@
 // Synthetic service planner. No persistence, network calls or operational data.
 window.createServicePlanningDemo=(()=>{
- const plans=new Map();
+ const plans=new Map(),savedTemplates=new Map();
  const node=(tag,text)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;return n;};
  const btn=(text,fn)=>{const b=node('button',text);b.type='button';b.className='demo-button';b.addEventListener('click',fn);return b;};
  const field=(form,label,type='text')=>{const l=node('label',label),i=node('input');i.type=type;i.setAttribute('aria-label',label);i.required=true;l.append(i);form.append(l);return i;};
@@ -8,7 +8,7 @@ window.createServicePlanningDemo=(()=>{
  return function createServicePlanningDemo(rows){
  const section=node('article');section.className='demo-planning';section.append(node('h2','Service planning studio'),node('p','Fictional outlines only. All times are Accra time (UTC).'));
  const calendar=node('section'),planner=node('section'),month=node('input');month.type='month';month.setAttribute('aria-label','Calendar month');month.value=(rows[0]?.[1]||new Date().toISOString()).slice(0,7);
- const calendarGrid=node('div');calendarGrid.className='demo-calendar';calendarGrid.setAttribute('aria-label','Monthly programme calendar');
+ const monthControls=node('div');monthControls.className='calendar-toolbar';function shiftMonth(delta){const [y,m]=month.value.split('-').map(Number);if(!y||!m)return;const next=new Date(Date.UTC(y,m-1+delta,1));month.value=next.toISOString().slice(0,7);drawCalendar();}monthControls.append(btn('Previous month',()=>shiftMonth(-1)),month,btn('Next month',()=>shiftMonth(1)));const calendarGrid=node('div');calendarGrid.className='demo-calendar';calendarGrid.setAttribute('aria-label','Monthly programme calendar');
  const select=node('select');select.setAttribute('aria-label','Select programme for outline');const label=node('label','Select programme for outline');label.append(select);
  const status=node('p');status.setAttribute('role','status');
  const start=node('input');start.type='time';start.setAttribute('aria-label','Service start time');const startLabel=node('label','Service start time');startLabel.append(start);
@@ -18,7 +18,7 @@ window.createServicePlanningDemo=(()=>{
  const cancel=btn('Cancel activity edit',()=>resetEdit());cancel.hidden=true;form.append(cancel);
  function resetEdit(){editing=null;form.reset();add.textContent='Add activity';cancel.hidden=true;}
  function beginEdit(item){editing=item;activity.value=item[0];participant.value=item[1];duration.value=item[2];add.textContent='Save activity changes';cancel.hidden=false;activity.focus();}
- function selected(){return rows[Number(select.value)];}
+ function selected(){return select.value===''?null:rows[Number(select.value)];}
  function plan(){const row=selected();if(!row)return null;if(!plans.has(row))plans.set(row,{start:'08:00',items:[]});return plans.get(row);}
  function drawCalendar(){
  calendarGrid.replaceChildren();const [y,m]=month.value.split('-').map(Number);if(!y||!m)return;
@@ -45,6 +45,7 @@ window.createServicePlanningDemo=(()=>{
  month.addEventListener('change',drawCalendar);select.addEventListener('change',()=>{resetEdit();drawOutline();});start.addEventListener('change',()=>{const p=plan();if(p&&start.value){p.start=start.value;drawOutline();}});
  form.addEventListener('submit',e=>{e.preventDefault();const p=plan(),n=Number(duration.value);if(!p||!activity.value.trim()||!participant.value.trim()||!Number.isInteger(n)||n<1||n>240)return;if(p.items.reduce((s,i)=>s+i[2],0)-(editing&&p.items.includes(editing)?editing[2]:0)+n>1440){status.textContent='Maximum outline duration is 24 hours.';return;}const values=[activity.value.trim(),participant.value.trim(),n];if(editing&&p.items.includes(editing)){editing.splice(0,3,...values);status.textContent='Sample activity updated.';}else{p.items.push(values);status.textContent='Sample activity added.';}resetEdit();drawOutline();});
  controls.append(btn('Load sample Sunday template',()=>{const p=plan();if(p&&(!p.items.length||confirm('Replace this sample outline?'))){resetEdit();p.items=template();drawOutline();}}),btn('Print sample outline',()=>{if(!plan())return;document.body.classList.add('printing-service-outline');try{window.print();}finally{document.body.classList.remove('printing-service-outline');}}));
- calendar.append(node('h3','Monthly calendar'),month,calendarGrid);planner.append(node('h3','Order of service'),label,startLabel,controls,status,form,outline);section.append(calendar,planner);refresh();return {section,refresh};
+ const templatePanel=node('div');templatePanel.className='template-panel';const templateName=node('input');templateName.maxLength=80;templateName.placeholder='Sample template name';templateName.setAttribute('aria-label','Sample template name');const templateSelect=node('select');templateSelect.setAttribute('aria-label','Reusable sample template');function refreshTemplates(){templateSelect.replaceChildren();const empty=node('option','Select a saved template');empty.value='';templateSelect.append(empty);for(const name of savedTemplates.keys()){const option=node('option',name);option.value=name;templateSelect.append(option);}}refreshTemplates();templatePanel.append(node('h4','Reusable templates'),templateName,btn('Save outline as template',()=>{const p=plan(),name=templateName.value.trim();if(!p?.items.length||!name){status.textContent='Enter a template name and add activities first.';return;}if(savedTemplates.has(name)&&!confirm('Replace this sample template?'))return;savedTemplates.set(name,p.items.map(i=>[...i]));refreshTemplates();templateSelect.value=name;status.textContent='Sample template saved in this tab.';}),templateSelect,btn('Apply saved template',()=>{const p=plan(),items=savedTemplates.get(templateSelect.value);if(!p||!items)return;if(p.items.length&&!confirm('Replace this sample outline?'))return;resetEdit();p.items=items.map(i=>[...i]);drawOutline();}));planner.append(templatePanel);
+ calendar.append(node('h3','Monthly calendar'),monthControls,calendarGrid);planner.append(node('h3','Order of service'),label,startLabel,controls,status,form,outline);section.append(calendar,planner);refresh();return {section,refresh};
  };
 })();
