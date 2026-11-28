@@ -38,3 +38,5 @@ jobs:
       - run: node --test tests/integration/programme-http.test.mjs
 
       - run: node --test tests/integration/hosted-preview.test.mjs
+
+      - run: node --test tests/integration/hosted-db-health.test.mjs
