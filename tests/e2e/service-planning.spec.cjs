@@ -25,3 +25,22 @@ test('calendar and service outline support template, sequencing and duration',as
  await page.reload();
  await expect(page.locator('.demo-outline')).toContainText('0 minutes total');
 });
+
+test('activity editing and overlapping sample programmes',async({page})=>{
+ await page.goto(origin+'/#events');
+ await page.getByRole('button',{name:'Load sample Sunday template'}).click();
+ const outline=page.locator('.demo-outline');
+ await outline.locator('li').first().getByRole('button',{name:'Edit activity'}).click();
+ await page.getByLabel('Duration (minutes)').fill('15');
+ await page.getByRole('button',{name:'Save activity changes'}).click();
+ await expect(outline).toContainText('105 minutes total');
+ await page.getByRole('button',{name:'Create sample programme'}).click();
+ await page.getByLabel('Programme',{exact:true}).fill('Demo overlapping programme');
+ await page.getByLabel('Date',{exact:true}).fill('2026-12-06');
+ await page.getByRole('button',{name:'Save sample'}).click();
+ await page.getByLabel('Select programme for outline').selectOption({label:'Demo overlapping programme · 2026-12-06'});
+ await page.getByRole('button',{name:'Load sample Sunday template'}).click();
+ await expect(outline).toContainText('Schedule overlap detected');
+ await page.getByLabel('Service start time').fill('12:00');
+ await expect(outline).toContainText('No overlap detected');
+});
