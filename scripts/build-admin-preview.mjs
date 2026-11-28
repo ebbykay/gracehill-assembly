@@ -7,5 +7,6 @@ fs.mkdirSync(path.join(out,'js'),{recursive:true});
 fs.copyFileSync('apps/administration/admin.html',path.join(out,'index.html'));
 for(const name of ['style.css','refinement.css','administration.css'])fs.copyFileSync('packages/ui/css/'+name,path.join(out,'css',name));
 fs.copyFileSync('packages/shared/js/administration.js',path.join(out,'js/administration.js'));
+fs.copyFileSync('packages/shared/js/service-planning-demo.js',path.join(out,'js/service-planning-demo.js'));
 fs.copyFileSync('packages/shared/js/membership-demo.js',path.join(out,'js/membership-demo.js'));
 console.log('Interactive synthetic administration demo built; never publish as an authenticated service.');
