@@ -1,3 +1,5 @@
+import {readFileSync} from 'node:fs';
+import {createProgrammeWorkspace} from './programme-workspace.mjs';
 import {createProgrammeStore} from './programme-store.mjs';
 import {createProgrammeHttp} from './programme-http.mjs';
 import {cookie,createAdminAuthHttp} from './admin-auth-http.mjs';
@@ -24,11 +26,15 @@ export function createAdminRuntime(config,db,identities){
  const attempts=createLoginAttemptStore(db);
  const login=createLoginService({config,attempts,identities,sessions,exchange:createCodeExchange(config),verifyId:createIdVerifier(config)});
  const auth=createAdminAuthHttp({login,sessions,origin:config.origin,workspace:true});
- const programmes=createProgrammeHttp({store:createProgrammeStore(db),origin:config.origin,resolvePrincipal:async req=>{
+ const store=createProgrammeStore(db);
+ const resolvePrincipal=async req=>{
  const id=await sessions.resolve(cookie(req,'__Host-gracehill_session'));
  if(!id)return null;
  const {rows}=await db.query("SELECT i.id, COALESCE(array_agg(r.role) FILTER (WHERE r.role IS NOT NULL), ARRAY[]::text[]) AS roles FROM gracehill.identities i LEFT JOIN gracehill.identity_roles r ON r.identity_id=i.id WHERE i.id=$1 AND i.enabled=true GROUP BY i.id",[id]);
  return rows.length===1?{subject:rows[0].id,roles:rows[0].roles}:null;
- }});
- return async(req,res,url,send)=>await auth(req,res,url,send)||await programmes(req,res,url,send);
+ };
+ const programmes=createProgrammeHttp({store,origin:config.origin,resolvePrincipal});
+ const assets=Object.fromEntries(['js','css'].map(ext=>['/admin/programmes.'+ext,{type:ext==='js'?'text/javascript; charset=utf-8':'text/css; charset=utf-8',body:readFileSync(new URL('../../administration/programmes.'+ext,import.meta.url),'utf8')}]));
+ const workspace=createProgrammeWorkspace({store,resolvePrincipal,assets});
+ return async(req,res,url,send)=>await auth(req,res,url,send)||await workspace(req,res,url,send)||await programmes(req,res,url,send);
 }
