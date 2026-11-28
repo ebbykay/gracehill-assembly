@@ -1,0 +1,30 @@
+const {test,expect}=require('@playwright/test');
+const origin='http://127.0.0.1:4174';
+test('command centre displays derived sample metrics, chart, agenda and actionable review queue',async({page})=>{
+ await page.goto(origin+'/#dashboard');
+ await expect(page.locator('.command-hero')).toContainText('Serve with purpose');
+ await expect(page.locator('.command-metric')).toHaveCount(4);
+ await expect(page.locator('.command-metrics')).toContainText('116');
+ await expect(page.locator('.command-bar-column')).toHaveCount(2);
+ await expect(page.locator('.command-agenda')).toContainText('Demo Sunday service');
+ await expect(page.locator('.command-review')).toContainText('Programmes in review');
+ await page.getByRole('button',{name:'Plan a service',exact:true}).click();
+ await expect(page.locator('h1')).toHaveText('Programme Management');
+ await expect(page.locator('.demo-planning')).toBeVisible();
+});
+test('mobile navigation opens, changes module and closes accessibly',async({page})=>{
+ await page.setViewportSize({width:320,height:800});
+ await page.goto(origin+'/#dashboard');
+ const menu=page.getByRole('button',{name:'Menu',exact:true});
+ await expect(menu).toBeVisible();
+ await expect(menu).toHaveAttribute('aria-expanded','false');
+ await expect(page.getByRole('navigation',{name:'Administration modules'})).toBeHidden();
+ await menu.click();
+ await expect(menu).toHaveAttribute('aria-expanded','true');
+ await page.getByRole('button',{name:'Membership Management',exact:true}).click();
+ await expect(page.locator('h1')).toHaveText('Membership Management');
+ await expect(menu).toHaveAttribute('aria-expanded','false');
+ await menu.click();await page.keyboard.press('Escape');
+ await expect(menu).toBeFocused();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(322);
+});
