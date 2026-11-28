@@ -9,16 +9,16 @@ window.createOperationsDemo=(()=>{
  const sum=(rows,kind)=>rows.filter(r=>r[1]===kind).reduce((s,r)=>s+cents(r[2]),0);
  const line=(parent,label,value)=>{const p=el('p');p.append(el('strong',label+': '),el('span',String(value)));parent.append(p);};
  return function(key,modules){
- const section=el('article');section.className='demo-operations';const body=el('div');section.append(el('h2',({attendance:'Service attendance register',finance:'Budget control and cash summary',reports:'Integrated operational report',ministry:'Volunteer scheduling',media:'Editorial review desk',care:'Follow-up worklist',communications:'Announcement review desk'})[key]),el('p','Synthetic demonstration. No operational records or external actions.'),body);
+ const section=el('article');section.className='demo-operations';const body=el('div');section.append(el('h2',({attendance:'Service attendance register',finance:'Budget control and cash summary',reports:'Integrated operational report',ministry:'Ministry worklist',media:'Editorial review desk',care:'Follow-up worklist',communications:'Announcement review desk'})[key]),el('p','Synthetic demonstration. No operational records or external actions.'),body);
  let selection=0,filter='';
  function refresh(){
  body.replaceChildren();
  if(key==='attendance'){
  const rows=modules.attendance.rows,select=field(body,'Select sample service','',rows.map((r,i)=>String(i+1)+' · '+r[0]+' · '+r[1]));select.selectedIndex=Math.min(selection,rows.length-1);
  select.addEventListener('change',()=>{selection=select.selectedIndex;refresh();});const service=rows[select.selectedIndex];if(!service)return;
- if(!registers.has(service))registers.set(service,new Set());const roster=registers.get(service);
+ if(!registers.has(service))registers.set(service,new Set());const roster=new Set(registers.get(service));
  const form=el('form');form.className='demo-form';for(const row of modules.membership.rows.filter(r=>r[2]!=='Inactive')){const label=el('label',row[0]),check=el('input');check.type='checkbox';check.checked=roster.has(row);check.addEventListener('change',()=>{if(check.checked)roster.add(row);else roster.delete(row);});label.append(check);form.append(label);}
- const note=el('p');note.setAttribute('role','status');line(body,'Existing aggregate count',service[2]);body.append(form,btn('Save sample register',()=>{service[2]=String([...roster].filter(r=>r[2]!=='Inactive').length);note.textContent='Sample register saved; aggregate count updated. Reopen Attendance to refresh the general table.';}),note);
+ const note=el('p');note.setAttribute('role','status');line(body,'Existing aggregate count',service[2]);body.append(form,btn('Save sample register',()=>{registers.set(service,roster);service[2]=String([...roster].filter(r=>r[2]!=='Inactive').length);section.dispatchEvent(new Event('demo-records-changed'));body.append(el('p','Sample register saved; aggregate count updated.'));}),note);
  }else if(key==='finance'){
  const rows=modules.finance.rows;const income=sum(rows,'Income'),expense=sum(rows,'Expense');line(body,'Recorded income',money(income));line(body,'Recorded expenses',money(expense));line(body,'Net cash movement',money(income-expense));
  const form=el('form');form.className='demo-form';const period=field(form,'Budget month','month');period.value=filter||'2026-11';period.required=true;const amount=field(form,'Sample expense ceiling (GHS)','number');amount.min='0';amount.max='100000000';amount.step='.01';amount.required=true;amount.value=budgets.has(period.value)?String(budgets.get(period.value)/100):'500';
