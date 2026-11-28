@@ -2,7 +2,7 @@
 const permissions=Object.freeze({
  editor:Object.freeze(['programme:draft','media:draft']),
  publisher:Object.freeze(['programme:publish','media:publish']),
- membership:Object.freeze(['membership:read']),
+ membership:Object.freeze(['membership:read','membership:write','attendance:read','attendance:write']),
  finance:Object.freeze(['finance:read']),
  pastoral:Object.freeze(['pastoral:read']),
  auditor:Object.freeze(['audit:read']),
